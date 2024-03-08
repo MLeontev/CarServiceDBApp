@@ -15,6 +15,8 @@ namespace CarServiceDBApp
         OwnershipRepository ownershipRepository;
         StatusRepository statusRepository;
 
+        bool onlyActiveOrders;
+
         public MainForm()
         {
             InitializeComponent();
@@ -27,14 +29,40 @@ namespace CarServiceDBApp
             ownershipRepository = new();
             statusRepository = new();
 
+            onlyActiveOrders = true;
+            btnActiveOrders.Enabled = false;
+
             UpdateOrders();
             LoadClientsToAdd();
             LoadWorkersToAdd();
         }
 
+        private void btnAllOrders_Click(object sender, EventArgs e)
+        {
+            onlyActiveOrders = false;
+            btnAllOrders.Enabled = false;
+            btnActiveOrders.Enabled = true;
+            UpdateOrders();
+        }
+
+        private void btnActiveOrders_Click(object sender, EventArgs e)
+        {
+            onlyActiveOrders = true;
+            btnAllOrders.Enabled = true;
+            btnActiveOrders.Enabled = false;
+            UpdateOrders();
+        }
+
         private void UpdateOrders()
         {
-            dgvOrders.DataSource = ordersRepository.GetAllOrders();
+            if (onlyActiveOrders)
+            {
+                dgvOrders.DataSource = ordersRepository.GetActiveOrders();
+            }
+            else
+            {
+                dgvOrders.DataSource = ordersRepository.GetAllOrders();
+            }
         }
 
         private void btnUpdateOrders_Click(object sender, EventArgs e)
@@ -44,12 +72,42 @@ namespace CarServiceDBApp
 
         private void dgvOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count > 0)
+            if (dgvOrders.SelectedRows.Count == 1)
             {
                 int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
                 dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
 
                 LoadClientsToEdit();
+
+                int statusId = (int)dgvOrders.SelectedRows[0].Cells["StatusId"].Value;
+                if (statusId == 1)
+                {
+                    btnStatusÇàÿâêà.Enabled = false;
+                    btnStatusÂĞàáîòå.Enabled = true;
+                    btnStatusÂûïîëíåí.Enabled = true;
+                    btnStatusÎòìåíåí.Enabled = true;
+                }
+                else if (statusId == 2)
+                {
+                    btnStatusÇàÿâêà.Enabled = true;
+                    btnStatusÂĞàáîòå.Enabled = false;
+                    btnStatusÂûïîëíåí.Enabled = true;
+                    btnStatusÎòìåíåí.Enabled = true;
+                }
+                else if (statusId == 3)
+                {
+                    btnStatusÇàÿâêà.Enabled = true;
+                    btnStatusÂĞàáîòå.Enabled = true;
+                    btnStatusÂûïîëíåí.Enabled = false;
+                    btnStatusÎòìåíåí.Enabled = true;
+                }
+                else if (statusId == 4)
+                {
+                    btnStatusÇàÿâêà.Enabled = true;
+                    btnStatusÂĞàáîòå.Enabled = true;
+                    btnStatusÂûïîëíåí.Enabled = true;
+                    btnStatusÎòìåíåí.Enabled = false;
+                }
             }
         }
 
@@ -271,6 +329,11 @@ namespace CarServiceDBApp
                 int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
                 ordersRepository.UpdateStatus(orderId, 1);
                 dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(1);
+
+                btnStatusÇàÿâêà.Enabled = false;
+                btnStatusÂĞàáîòå.Enabled = true;
+                btnStatusÂûïîëíåí.Enabled = true;
+                btnStatusÎòìåíåí.Enabled = true;
             }
             else
             {
@@ -285,6 +348,11 @@ namespace CarServiceDBApp
                 int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
                 ordersRepository.UpdateStatus(orderId, 2);
                 dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(2);
+
+                btnStatusÇàÿâêà.Enabled = true;
+                btnStatusÂĞàáîòå.Enabled = false;
+                btnStatusÂûïîëíåí.Enabled = true;
+                btnStatusÎòìåíåí.Enabled = true;
             }
             else
             {
@@ -304,6 +372,16 @@ namespace CarServiceDBApp
                     ordersRepository.UpdateCompletionDate(orderId, completionDateForm.CompletionDate);
                     dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(3);
                     dgvOrders.SelectedRows[0].Cells["CompletionDate"].Value = completionDateForm.CompletionDate.Date;
+
+                    btnStatusÇàÿâêà.Enabled = true;
+                    btnStatusÂĞàáîòå.Enabled = true;
+                    btnStatusÂûïîëíåí.Enabled = false;
+                    btnStatusÎòìåíåí.Enabled = true;
+
+                    if (onlyActiveOrders)
+                    {
+                        dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                    }
                 }
             }
             else
@@ -319,11 +397,23 @@ namespace CarServiceDBApp
                 int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
                 ordersRepository.UpdateStatus(orderId, 4);
                 dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(4);
+
+                btnStatusÇàÿâêà.Enabled = true;
+                btnStatusÂĞàáîòå.Enabled = true;
+                btnStatusÂûïîëíåí.Enabled = true;
+                btnStatusÎòìåíåí.Enabled = false;
+
+                if (onlyActiveOrders)
+                {
+                    dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                }
             }
             else
             {
                 MessageBox.Show("Âûáåğèòå òîëüêî îäèí çàêàç äëÿ èçìåíåíèÿ ñòàòóñà.", "Ïğåäóïğåæäåíèå", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+
     }
 }

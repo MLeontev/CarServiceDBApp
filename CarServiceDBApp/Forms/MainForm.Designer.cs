@@ -30,17 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dgvOrders = new DataGridView();
-            OrderId = new DataGridViewTextBoxColumn();
-            OwnershipId = new DataGridViewTextBoxColumn();
-            ClientId = new DataGridViewTextBoxColumn();
-            CarId = new DataGridViewTextBoxColumn();
-            ClientFullName = new DataGridViewTextBoxColumn();
-            CarFullName = new DataGridViewTextBoxColumn();
-            AppointmentDate = new DataGridViewTextBoxColumn();
-            CompletionDate = new DataGridViewTextBoxColumn();
-            Sum = new DataGridViewTextBoxColumn();
-            StatusId = new DataGridViewTextBoxColumn();
-            StatusName = new DataGridViewTextBoxColumn();
             toolStrip1 = new ToolStrip();
             tsddbBases = new ToolStripDropDownButton();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -86,6 +75,19 @@
             btnStatusВыполнен = new Button();
             btnStatusВРаботе = new Button();
             btnStatusЗаявка = new Button();
+            btnAllOrders = new Button();
+            btnActiveOrders = new Button();
+            OrderId = new DataGridViewTextBoxColumn();
+            OwnershipId = new DataGridViewTextBoxColumn();
+            ClientId = new DataGridViewTextBoxColumn();
+            CarId = new DataGridViewTextBoxColumn();
+            ClientFullName = new DataGridViewTextBoxColumn();
+            CarFullName = new DataGridViewTextBoxColumn();
+            AppointmentDate = new DataGridViewTextBoxColumn();
+            CompletionDate = new DataGridViewTextBoxColumn();
+            Sum = new DataGridViewTextBoxColumn();
+            StatusId = new DataGridViewTextBoxColumn();
+            StatusName = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvOrderDetails).BeginInit();
@@ -111,77 +113,6 @@
             dgvOrders.Size = new Size(1129, 395);
             dgvOrders.TabIndex = 0;
             dgvOrders.SelectionChanged += dgvOrders_SelectionChanged;
-            // 
-            // OrderId
-            // 
-            OrderId.DataPropertyName = "OrderId";
-            OrderId.HeaderText = "Номер заказа";
-            OrderId.Name = "OrderId";
-            // 
-            // OwnershipId
-            // 
-            OwnershipId.DataPropertyName = "OwnershipId";
-            OwnershipId.HeaderText = "OwnershipId";
-            OwnershipId.Name = "OwnershipId";
-            OwnershipId.Visible = false;
-            // 
-            // ClientId
-            // 
-            ClientId.DataPropertyName = "ClientId";
-            ClientId.HeaderText = "ClientId";
-            ClientId.Name = "ClientId";
-            ClientId.Visible = false;
-            // 
-            // CarId
-            // 
-            CarId.DataPropertyName = "CarId";
-            CarId.HeaderText = "CarId";
-            CarId.Name = "CarId";
-            CarId.Visible = false;
-            // 
-            // ClientFullName
-            // 
-            ClientFullName.DataPropertyName = "ClientFullName";
-            ClientFullName.HeaderText = "Клиент";
-            ClientFullName.Name = "ClientFullName";
-            // 
-            // CarFullName
-            // 
-            CarFullName.DataPropertyName = "CarFullName";
-            CarFullName.HeaderText = "Автомобиль";
-            CarFullName.Name = "CarFullName";
-            // 
-            // AppointmentDate
-            // 
-            AppointmentDate.DataPropertyName = "AppointmentDate";
-            AppointmentDate.HeaderText = "Дата приема";
-            AppointmentDate.Name = "AppointmentDate";
-            // 
-            // CompletionDate
-            // 
-            CompletionDate.DataPropertyName = "CompletionDate";
-            CompletionDate.HeaderText = "Дата выпуска";
-            CompletionDate.Name = "CompletionDate";
-            // 
-            // Sum
-            // 
-            Sum.DataPropertyName = "Sum";
-            Sum.HeaderText = "Сумма";
-            Sum.Name = "Sum";
-            // 
-            // StatusId
-            // 
-            StatusId.DataPropertyName = "StatusId";
-            StatusId.HeaderText = "StatusId";
-            StatusId.Name = "StatusId";
-            StatusId.Visible = false;
-            // 
-            // StatusName
-            // 
-            StatusName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            StatusName.DataPropertyName = "StatusName";
-            StatusName.HeaderText = "Статус";
-            StatusName.Name = "StatusName";
             // 
             // toolStrip1
             // 
@@ -221,13 +152,13 @@
             label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             label1.Location = new Point(12, 38);
             label1.Name = "label1";
-            label1.Size = new Size(124, 17);
+            label1.Size = new Size(57, 17);
             label1.TabIndex = 2;
-            label1.Text = "Активные заказы:";
+            label1.Text = "Заказы:";
             // 
             // btnUpdateOrders
             // 
-            btnUpdateOrders.Location = new Point(138, 36);
+            btnUpdateOrders.Location = new Point(1065, 38);
             btnUpdateOrders.Name = "btnUpdateOrders";
             btnUpdateOrders.Size = new Size(75, 23);
             btnUpdateOrders.TabIndex = 3;
@@ -622,12 +553,104 @@
             btnStatusЗаявка.UseVisualStyleBackColor = true;
             btnStatusЗаявка.Click += btnStatusЗаявка_Click;
             // 
+            // btnAllOrders
+            // 
+            btnAllOrders.Location = new Point(75, 36);
+            btnAllOrders.Name = "btnAllOrders";
+            btnAllOrders.Size = new Size(92, 23);
+            btnAllOrders.TabIndex = 13;
+            btnAllOrders.Text = "Все заказы";
+            btnAllOrders.UseVisualStyleBackColor = true;
+            btnAllOrders.Click += btnAllOrders_Click;
+            // 
+            // btnActiveOrders
+            // 
+            btnActiveOrders.Location = new Point(173, 36);
+            btnActiveOrders.Name = "btnActiveOrders";
+            btnActiveOrders.Size = new Size(172, 23);
+            btnActiveOrders.TabIndex = 14;
+            btnActiveOrders.Text = "Только активные заказы";
+            btnActiveOrders.UseVisualStyleBackColor = true;
+            btnActiveOrders.Click += btnActiveOrders_Click;
+            // 
+            // OrderId
+            // 
+            OrderId.DataPropertyName = "OrderId";
+            OrderId.HeaderText = "Номер заказа";
+            OrderId.Name = "OrderId";
+            // 
+            // OwnershipId
+            // 
+            OwnershipId.DataPropertyName = "OwnershipId";
+            OwnershipId.HeaderText = "OwnershipId";
+            OwnershipId.Name = "OwnershipId";
+            OwnershipId.Visible = false;
+            // 
+            // ClientId
+            // 
+            ClientId.DataPropertyName = "ClientId";
+            ClientId.HeaderText = "ClientId";
+            ClientId.Name = "ClientId";
+            ClientId.Visible = false;
+            // 
+            // CarId
+            // 
+            CarId.DataPropertyName = "CarId";
+            CarId.HeaderText = "CarId";
+            CarId.Name = "CarId";
+            CarId.Visible = false;
+            // 
+            // ClientFullName
+            // 
+            ClientFullName.DataPropertyName = "ClientFullName";
+            ClientFullName.HeaderText = "Клиент";
+            ClientFullName.Name = "ClientFullName";
+            // 
+            // CarFullName
+            // 
+            CarFullName.DataPropertyName = "CarFullName";
+            CarFullName.HeaderText = "Автомобиль";
+            CarFullName.Name = "CarFullName";
+            // 
+            // AppointmentDate
+            // 
+            AppointmentDate.DataPropertyName = "AppointmentDate";
+            AppointmentDate.HeaderText = "Дата приема";
+            AppointmentDate.Name = "AppointmentDate";
+            // 
+            // CompletionDate
+            // 
+            CompletionDate.DataPropertyName = "CompletionDate";
+            CompletionDate.HeaderText = "Дата выпуска";
+            CompletionDate.Name = "CompletionDate";
+            // 
+            // Sum
+            // 
+            Sum.DataPropertyName = "Sum";
+            Sum.HeaderText = "Сумма";
+            Sum.Name = "Sum";
+            // 
+            // StatusId
+            // 
+            StatusId.DataPropertyName = "StatusId";
+            StatusId.HeaderText = "StatusId";
+            StatusId.Name = "StatusId";
+            // 
+            // StatusName
+            // 
+            StatusName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            StatusName.DataPropertyName = "StatusName";
+            StatusName.HeaderText = "Статус";
+            StatusName.Name = "StatusName";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Menu;
             ClientSize = new Size(1152, 817);
+            Controls.Add(btnActiveOrders);
+            Controls.Add(btnAllOrders);
             Controls.Add(groupBox1);
             Controls.Add(gbOrderDetails);
             Controls.Add(gbOrder);
@@ -636,7 +659,7 @@
             Controls.Add(toolStrip1);
             Controls.Add(dgvOrders);
             Name = "MainForm";
-            Text = "Активные заказы";
+            Text = "Заказы";
             ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
@@ -667,17 +690,6 @@
         private Button btnDeleteServiceFromOrder;
         private Button btnCompleteService;
         private Button btnOpenAddServiceForm;
-        private DataGridViewTextBoxColumn OrderId;
-        private DataGridViewTextBoxColumn OwnershipId;
-        private DataGridViewTextBoxColumn ClientId;
-        private DataGridViewTextBoxColumn CarId;
-        private DataGridViewTextBoxColumn ClientFullName;
-        private DataGridViewTextBoxColumn CarFullName;
-        private DataGridViewTextBoxColumn AppointmentDate;
-        private DataGridViewTextBoxColumn CompletionDate;
-        private DataGridViewTextBoxColumn Sum;
-        private DataGridViewTextBoxColumn StatusId;
-        private DataGridViewTextBoxColumn StatusName;
         private Button btnEditWorker;
         private GroupBox gbOrder;
         private TabControl gbOrders;
@@ -712,5 +724,18 @@
         private Button btnStatusВыполнен;
         private Button btnStatusВРаботе;
         private Button btnStatusЗаявка;
+        private Button btnAllOrders;
+        private Button btnActiveOrders;
+        private DataGridViewTextBoxColumn OrderId;
+        private DataGridViewTextBoxColumn OwnershipId;
+        private DataGridViewTextBoxColumn ClientId;
+        private DataGridViewTextBoxColumn CarId;
+        private DataGridViewTextBoxColumn ClientFullName;
+        private DataGridViewTextBoxColumn CarFullName;
+        private DataGridViewTextBoxColumn AppointmentDate;
+        private DataGridViewTextBoxColumn CompletionDate;
+        private DataGridViewTextBoxColumn Sum;
+        private DataGridViewTextBoxColumn StatusId;
+        private DataGridViewTextBoxColumn StatusName;
     }
 }
