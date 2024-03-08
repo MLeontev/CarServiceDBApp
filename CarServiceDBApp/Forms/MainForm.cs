@@ -13,6 +13,7 @@ namespace CarServiceDBApp
         CarsRepository carsRepository;
         WorkersRepository workersRepository;
         OwnershipRepository ownershipRepository;
+        StatusRepository statusRepository;
 
         public MainForm()
         {
@@ -24,6 +25,7 @@ namespace CarServiceDBApp
             carsRepository = new();
             workersRepository = new();
             ownershipRepository = new();
+            statusRepository = new();
 
             UpdateOrders();
             LoadClientsToAdd();
@@ -203,7 +205,6 @@ namespace CarServiceDBApp
             cbCarsToEdit.DataSource = carsDataTable;
             cbCarsToEdit.ValueMember = "CarId";
             cbCarsToEdit.DisplayMember = "CarFullName";
-
             var carIdToSelect = Convert.ToInt32(dgvOrders.CurrentRow.Cells["CarId"].Value);
             cbCarsToEdit.SelectedValue = carIdToSelect;
         }
@@ -221,39 +222,102 @@ namespace CarServiceDBApp
 
         private void bntEditOrder_Click(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count == 0)
+            if (dgvOrders.SelectedRows.Count == 1)
             {
-                MessageBox.Show("Выберите заказ для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Выберите заказ для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-            if (cbClientsToEdit.SelectedItem == null)
+                if (cbClientsToEdit.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите клиента для редактирования заказа.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (cbCarsToEdit.SelectedItem == null)
+                {
+                    MessageBox.Show("Выберите автомобиль для редактирования заказа.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+
+                DataRowView drvClient = (DataRowView)cbClientsToEdit.SelectedItem;
+                int clientId = Convert.ToInt32(drvClient["ClientId"]);
+
+                DataRowView drvCar = (DataRowView)cbCarsToEdit.SelectedItem;
+                int carId = Convert.ToInt32(drvCar["CarId"]);
+
+                int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
+
+                DateTime dateTime = dptDateToEdit.Value;
+
+                ordersRepository.UpdateOrder(orderId, ownershipId, dateTime);
+
+                UpdateOrders();
+            }
+            else
             {
-                MessageBox.Show("Выберите клиента для редактирования заказа.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MessageBox.Show("Выберите только один заказ для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
 
-            if (cbCarsToEdit.SelectedItem == null)
+        private void btnStatusЗаявка_Click(object sender, EventArgs e)
+        {
+            if (dgvOrders.SelectedRows.Count == 1)
             {
-                MessageBox.Show("Выберите автомобиль для редактирования заказа.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                ordersRepository.UpdateStatus(orderId, 1);
+                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(1);
             }
+            else
+            {
+                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
-            int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+        private void btnStatusВРаботе_Click(object sender, EventArgs e)
+        {
+            if (dgvOrders.SelectedRows.Count == 1)
+            {
+                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                ordersRepository.UpdateStatus(orderId, 2);
+                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(2);
+            }
+            else
+            {
+                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
-            DataRowView drvClient = (DataRowView)cbClientsToEdit.SelectedItem;
-            int clientId = Convert.ToInt32(drvClient["ClientId"]);
+        private void btnStatusВыполнен_Click(object sender, EventArgs e)
+        {
+            if (dgvOrders.SelectedRows.Count == 1)
+            {
+                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                ordersRepository.UpdateStatus(orderId, 3);
+                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(3);
+            }
+            else
+            {
+                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
-            DataRowView drvCar = (DataRowView)cbCarsToEdit.SelectedItem;
-            int carId = Convert.ToInt32(drvCar["CarId"]);
-
-            int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
-
-            DateTime dateTime = dptDateToEdit.Value;
-
-            ordersRepository.UpdateOrder(orderId, ownershipId, dateTime);
-
-            UpdateOrders();
+        private void btnStatusОтменен_Click(object sender, EventArgs e)
+        {
+            if (dgvOrders.SelectedRows.Count == 1)
+            {
+                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                ordersRepository.UpdateStatus(orderId, 4);
+                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(4);
+            }
+            else
+            {
+                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

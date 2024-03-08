@@ -101,6 +101,7 @@
             // 
             dgvOrders.AllowUserToAddRows = false;
             dgvOrders.AllowUserToDeleteRows = false;
+            dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvOrders.Columns.AddRange(new DataGridViewColumn[] { OrderId, OwnershipId, ClientId, CarId, ClientFullName, CarFullName, AppointmentDate, CompletionDate, Sum, StatusId, StatusName });
             dgvOrders.Location = new Point(12, 69);
@@ -116,7 +117,6 @@
             OrderId.DataPropertyName = "OrderId";
             OrderId.HeaderText = "Номер заказа";
             OrderId.Name = "OrderId";
-            OrderId.Width = 120;
             // 
             // OwnershipId
             // 
@@ -144,28 +144,24 @@
             ClientFullName.DataPropertyName = "ClientFullName";
             ClientFullName.HeaderText = "Клиент";
             ClientFullName.Name = "ClientFullName";
-            ClientFullName.Width = 200;
             // 
             // CarFullName
             // 
             CarFullName.DataPropertyName = "CarFullName";
             CarFullName.HeaderText = "Автомобиль";
             CarFullName.Name = "CarFullName";
-            CarFullName.Width = 200;
             // 
             // AppointmentDate
             // 
             AppointmentDate.DataPropertyName = "AppointmentDate";
             AppointmentDate.HeaderText = "Дата приема";
             AppointmentDate.Name = "AppointmentDate";
-            AppointmentDate.Width = 150;
             // 
             // CompletionDate
             // 
             CompletionDate.DataPropertyName = "CompletionDate";
             CompletionDate.HeaderText = "Дата выпуска";
             CompletionDate.Name = "CompletionDate";
-            CompletionDate.Width = 150;
             // 
             // Sum
             // 
@@ -310,9 +306,9 @@
             // 
             // btnDeleteOrder
             // 
-            btnDeleteOrder.Location = new Point(992, 28);
+            btnDeleteOrder.Location = new Point(6, 229);
             btnDeleteOrder.Name = "btnDeleteOrder";
-            btnDeleteOrder.Size = new Size(149, 35);
+            btnDeleteOrder.Size = new Size(383, 35);
             btnDeleteOrder.TabIndex = 5;
             btnDeleteOrder.Text = "Удалить заказ";
             btnDeleteOrder.UseVisualStyleBackColor = true;
@@ -483,6 +479,7 @@
             tpCurrentOrder.Controls.Add(bntEditOrder);
             tpCurrentOrder.Controls.Add(dptDateToEdit);
             tpCurrentOrder.Controls.Add(label6);
+            tpCurrentOrder.Controls.Add(btnDeleteOrder);
             tpCurrentOrder.Controls.Add(cbCarsToEdit);
             tpCurrentOrder.Controls.Add(label8);
             tpCurrentOrder.Controls.Add(cbClientsToEdit);
@@ -497,7 +494,7 @@
             // 
             // bntEditOrder
             // 
-            bntEditOrder.Location = new Point(6, 230);
+            bntEditOrder.Location = new Point(6, 171);
             bntEditOrder.Name = "bntEditOrder";
             bntEditOrder.Size = new Size(383, 36);
             bntEditOrder.TabIndex = 17;
@@ -593,6 +590,7 @@
             btnStatusОтменен.TabIndex = 3;
             btnStatusОтменен.Text = "Отменен";
             btnStatusОтменен.UseVisualStyleBackColor = true;
+            btnStatusОтменен.Click += btnStatusОтменен_Click;
             // 
             // btnStatusВыполнен
             // 
@@ -602,6 +600,7 @@
             btnStatusВыполнен.TabIndex = 2;
             btnStatusВыполнен.Text = "Выполнен-закрыт";
             btnStatusВыполнен.UseVisualStyleBackColor = true;
+            btnStatusВыполнен.Click += btnStatusВыполнен_Click;
             // 
             // btnStatusВРаботе
             // 
@@ -611,6 +610,7 @@
             btnStatusВРаботе.TabIndex = 1;
             btnStatusВРаботе.Text = "В работе";
             btnStatusВРаботе.UseVisualStyleBackColor = true;
+            btnStatusВРаботе.Click += btnStatusВРаботе_Click;
             // 
             // btnStatusЗаявка
             // 
@@ -620,6 +620,7 @@
             btnStatusЗаявка.TabIndex = 0;
             btnStatusЗаявка.Text = "Заявка";
             btnStatusЗаявка.UseVisualStyleBackColor = true;
+            btnStatusЗаявка.Click += btnStatusЗаявка_Click;
             // 
             // MainForm
             // 
@@ -630,7 +631,6 @@
             Controls.Add(groupBox1);
             Controls.Add(gbOrderDetails);
             Controls.Add(gbOrder);
-            Controls.Add(btnDeleteOrder);
             Controls.Add(btnUpdateOrders);
             Controls.Add(label1);
             Controls.Add(toolStrip1);

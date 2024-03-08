@@ -148,7 +148,7 @@ namespace CarServiceDBApp.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

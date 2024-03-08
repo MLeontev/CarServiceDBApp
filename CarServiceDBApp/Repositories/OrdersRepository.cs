@@ -130,7 +130,7 @@ namespace CarServiceDBApp.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -162,7 +162,37 @@ namespace CarServiceDBApp.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void UpdateStatus(int orderId, int statusId)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"UPDATE Orders 
+                                     SET status_id = @statusId
+                                     WHERE id = @orderId;";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@statusId", statusId);
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Ошибка при работе с базой данных: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
