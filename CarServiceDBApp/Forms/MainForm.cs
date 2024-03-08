@@ -297,8 +297,14 @@ namespace CarServiceDBApp
             if (dgvOrders.SelectedRows.Count == 1)
             {
                 int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                ordersRepository.UpdateStatus(orderId, 3);
-                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(3);
+                CompletionDateForm completionDateForm = new CompletionDateForm((DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value);
+                if (completionDateForm.ShowDialog() == DialogResult.OK)
+                {
+                    ordersRepository.UpdateStatus(orderId, 3);
+                    ordersRepository.UpdateCompletionDate(orderId, completionDateForm.CompletionDate);
+                    dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(3);
+                    dgvOrders.SelectedRows[0].Cells["CompletionDate"].Value = completionDateForm.CompletionDate.Date;
+                }
             }
             else
             {
