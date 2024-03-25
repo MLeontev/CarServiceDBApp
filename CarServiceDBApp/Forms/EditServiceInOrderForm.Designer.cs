@@ -106,7 +106,7 @@
             Controls.Add(btnEditWorkerInService);
             Controls.Add(dgvWorkersToOrder);
             Name = "EditServiceInOrderForm";
-            Text = "EditServiceInOrderForm";
+            Text = "Изменение исполнителя";
             ((System.ComponentModel.ISupportInitialize)dgvWorkersToOrder).EndInit();
             ResumeLayout(false);
         }

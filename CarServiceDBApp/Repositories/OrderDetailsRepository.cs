@@ -17,11 +17,13 @@ namespace CarServiceDBApp.Repositories
         {
             DataTable dataTable = new DataTable();
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
 
-                string query = @"
+                    string query = @"
                                 SELECT
                                     Order_details.Id AS OrderDetailsId,
                                     Services.id AS ServiceId,
@@ -43,14 +45,23 @@ namespace CarServiceDBApp.Repositories
                                     Order_details.order_id = @orderId;
                             ";
 
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@orderId", orderId);
-                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        adapter.Fill(dataTable);
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
                     }
                 }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Ошибка при работе с базой данных: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return dataTable;

@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,39 @@ namespace CarServiceDBApp.Repositories
             }
 
             return ownershipId;
+        }
+
+        public void DeleteOwnership(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"DELETE FROM Ownership WHERE id = @id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void CreateOwnership(int carId, int clientId)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"INSERT INTO Ownership values (0, @clientId, @carId)";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@clientId", clientId);
+                    command.Parameters.AddWithValue("@carId", carId);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

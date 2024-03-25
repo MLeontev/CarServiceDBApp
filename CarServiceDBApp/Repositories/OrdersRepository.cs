@@ -32,7 +32,7 @@ namespace CarServiceDBApp.Repositories
                                     CONCAT(Cars.brand, ' ', Cars.model, ' ', Cars.registration_number) AS CarFullName,
                                     Orders.appointment_date AS AppointmentDate,
                                     Orders.completion_date AS CompletionDate,
-                                    CONCAT(SUM(Services.price), ' руб.') AS Sum,
+                                    SUM(Services.price) AS Sum,
                                     Order_status.Id AS StatusId,
                                     Order_status.Name AS StatusName
                                 FROM 
@@ -76,6 +76,136 @@ namespace CarServiceDBApp.Repositories
             return dataTable;
         }
 
+        public DataTable GetAllOrdersByCarId(int id)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                                SELECT 
+                                    Orders.id AS OrderId,
+                                    Ownership.id AS OwnershipId,
+                                    Clients.id AS ClientId,
+                                    Cars.id AS CarId,
+                                    CONCAT(Clients.surname, ' ', Clients.name, ' ', IFNULL(Clients.patronymic, '')) AS ClientFullName,
+                                    CONCAT(Cars.brand, ' ', Cars.model, ' ', Cars.registration_number) AS CarFullName,
+                                    Orders.appointment_date AS AppointmentDate,
+                                    Orders.completion_date AS CompletionDate,
+                                    SUM(Services.price) AS Sum,
+                                    Order_status.Id AS StatusId,
+                                    Order_status.Name AS StatusName
+                                FROM 
+                                    Orders
+                                LEFT JOIN 
+                                    Ownership ON Orders.ownership_id = Ownership.id
+                                LEFT JOIN 
+                                    Clients ON Ownership.client_id = Clients.id
+                                LEFT JOIN 
+                                    Cars ON Ownership.car_id = Cars.id
+                                LEFT JOIN 
+                                    Order_details ON Orders.id = Order_details.order_id
+                                LEFT JOIN 
+                                    Services ON Order_details.service_id = Services.id
+                                LEFT JOIN 
+                                    Order_status ON Orders.status_id = Order_status.id
+                                WHERE
+                                    Cars.id = @carId
+                                GROUP BY 
+                                    Orders.id, 
+                                    Ownership.id, 
+                                    Clients.id, 
+                                    Cars.id,
+                                    ClientFullName,
+                                    CarFullName,
+                                    AppointmentDate,
+                                    CompletionDate,
+                                    Order_status.id,
+                                    Order_status.Name
+                                ORDER BY 
+                                    Orders.appointment_date DESC
+                            ";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    {
+                        command.Parameters.AddWithValue("@carId", id);
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+
+        public DataTable GetAllOrdersByClientId(int id)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                                SELECT 
+                                    Orders.id AS OrderId,
+                                    Ownership.id AS OwnershipId,
+                                    Clients.id AS ClientId,
+                                    Cars.id AS CarId,
+                                    CONCAT(Clients.surname, ' ', Clients.name, ' ', IFNULL(Clients.patronymic, '')) AS ClientFullName,
+                                    CONCAT(Cars.brand, ' ', Cars.model, ' ', Cars.registration_number) AS CarFullName,
+                                    Orders.appointment_date AS AppointmentDate,
+                                    Orders.completion_date AS CompletionDate,
+                                    SUM(Services.price) AS Sum,
+                                    Order_status.Id AS StatusId,
+                                    Order_status.Name AS StatusName
+                                FROM 
+                                    Orders
+                                LEFT JOIN 
+                                    Ownership ON Orders.ownership_id = Ownership.id
+                                LEFT JOIN 
+                                    Clients ON Ownership.client_id = Clients.id
+                                LEFT JOIN 
+                                    Cars ON Ownership.car_id = Cars.id
+                                LEFT JOIN 
+                                    Order_details ON Orders.id = Order_details.order_id
+                                LEFT JOIN 
+                                    Services ON Order_details.service_id = Services.id
+                                LEFT JOIN 
+                                    Order_status ON Orders.status_id = Order_status.id
+                                WHERE
+                                    Clients.id = @id
+                                GROUP BY 
+                                    Orders.id, 
+                                    Ownership.id, 
+                                    Clients.id, 
+                                    Cars.id,
+                                    ClientFullName,
+                                    CarFullName,
+                                    AppointmentDate,
+                                    CompletionDate,
+                                    Order_status.id,
+                                    Order_status.Name
+                                ORDER BY 
+                                    Orders.appointment_date DESC
+                            ";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+
         public DataTable GetActiveOrders()
         {
             DataTable dataTable = new DataTable();
@@ -94,7 +224,7 @@ namespace CarServiceDBApp.Repositories
                                     CONCAT(Cars.brand, ' ', Cars.model, ' ', Cars.registration_number) AS CarFullName,
                                     Orders.appointment_date AS AppointmentDate,
                                     Orders.completion_date AS CompletionDate,
-                                    CONCAT(SUM(Services.price), ' руб.') AS Sum,
+                                    SUM(Services.price) AS Sum,
                                     Order_status.Id AS StatusId,
                                     Order_status.Name AS StatusName
                                 FROM 
@@ -287,6 +417,51 @@ namespace CarServiceDBApp.Repositories
             {
                 MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public decimal GetOrderSum(int orderId)
+        {
+            decimal totalSum = 0;
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT 
+                                SUM(Services.price) AS Sum
+                                FROM 
+                                    Orders
+                                LEFT JOIN 
+                                    Order_details ON Orders.id = Order_details.order_id
+                                LEFT JOIN 
+                                    Services ON Order_details.service_id = Services.id
+                                LEFT JOIN 
+                                    Order_status ON Orders.status_id = Order_status.id
+                                WHERE Orders.id = @orderId;";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        object result = command.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            totalSum = Convert.ToDecimal(result);
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Ошибка при работе с базой данных: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return totalSum;
         }
     }
 }

@@ -130,7 +130,7 @@
             Controls.Add(cbWorkerToService);
             Controls.Add(dgvServicesToOrder);
             Name = "AddServiceToOrderForm";
-            Text = "AddServiceToOrderForm";
+            Text = "Добавление услуги к заказу";
             ((System.ComponentModel.ISupportInitialize)dgvServicesToOrder).EndInit();
             ResumeLayout(false);
             PerformLayout();

@@ -71,7 +71,7 @@
             Controls.Add(btnAccept);
             Controls.Add(dtpCompletionDate);
             Name = "CompletionDateForm";
-            Text = "CompletionDateForm";
+            Text = "Дата закрытия";
             ResumeLayout(false);
         }
 

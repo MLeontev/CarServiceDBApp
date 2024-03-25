@@ -30,10 +30,28 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dgvOrders = new DataGridView();
+            OrderId = new DataGridViewTextBoxColumn();
+            OwnershipId = new DataGridViewTextBoxColumn();
+            ClientId = new DataGridViewTextBoxColumn();
+            CarId = new DataGridViewTextBoxColumn();
+            ClientFullName = new DataGridViewTextBoxColumn();
+            CarFullName = new DataGridViewTextBoxColumn();
+            AppointmentDate = new DataGridViewTextBoxColumn();
+            CompletionDate = new DataGridViewTextBoxColumn();
+            Sum = new DataGridViewTextBoxColumn();
+            StatusId = new DataGridViewTextBoxColumn();
+            StatusName = new DataGridViewTextBoxColumn();
             toolStrip1 = new ToolStrip();
             tsddbBases = new ToolStripDropDownButton();
+            клиентыToolStripMenuItem = new ToolStripMenuItem();
+            автомобилиToolStripMenuItem = new ToolStripMenuItem();
+            услугиToolStripMenuItem = new ToolStripMenuItem();
+            сотрудникиToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             tsddbReports = new ToolStripDropDownButton();
+            отчетОМастерахToolStripMenuItem = new ToolStripMenuItem();
+            отчетОВыполненныхУслугахToolStripMenuItem = new ToolStripMenuItem();
+            отчетОЗаказахToolStripMenuItem = new ToolStripMenuItem();
             label1 = new Label();
             btnUpdateOrders = new Button();
             dgvOrderDetails = new DataGridView();
@@ -50,7 +68,7 @@
             btnOpenAddServiceForm = new Button();
             btnEditWorker = new Button();
             gbOrder = new GroupBox();
-            gbOrders = new TabControl();
+            tcOrders = new TabControl();
             tpNewOrder = new TabPage();
             btnCreateOrder = new Button();
             dptDateToAdd = new DateTimePicker();
@@ -63,7 +81,7 @@
             label2 = new Label();
             tpCurrentOrder = new TabPage();
             bntEditOrder = new Button();
-            dptDateToEdit = new DateTimePicker();
+            dtpDateToEdit = new DateTimePicker();
             label6 = new Label();
             cbCarsToEdit = new ComboBox();
             label8 = new Label();
@@ -77,22 +95,11 @@
             btnStatusЗаявка = new Button();
             btnAllOrders = new Button();
             btnActiveOrders = new Button();
-            OrderId = new DataGridViewTextBoxColumn();
-            OwnershipId = new DataGridViewTextBoxColumn();
-            ClientId = new DataGridViewTextBoxColumn();
-            CarId = new DataGridViewTextBoxColumn();
-            ClientFullName = new DataGridViewTextBoxColumn();
-            CarFullName = new DataGridViewTextBoxColumn();
-            AppointmentDate = new DataGridViewTextBoxColumn();
-            CompletionDate = new DataGridViewTextBoxColumn();
-            Sum = new DataGridViewTextBoxColumn();
-            StatusId = new DataGridViewTextBoxColumn();
-            StatusName = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvOrderDetails).BeginInit();
             gbOrder.SuspendLayout();
-            gbOrders.SuspendLayout();
+            tcOrders.SuspendLayout();
             tpNewOrder.SuspendLayout();
             tpCurrentOrder.SuspendLayout();
             gbOrderDetails.SuspendLayout();
@@ -108,11 +115,94 @@
             dgvOrders.Columns.AddRange(new DataGridViewColumn[] { OrderId, OwnershipId, ClientId, CarId, ClientFullName, CarFullName, AppointmentDate, CompletionDate, Sum, StatusId, StatusName });
             dgvOrders.Location = new Point(12, 69);
             dgvOrders.Name = "dgvOrders";
+            dgvOrders.ReadOnly = true;
             dgvOrders.RowTemplate.Height = 25;
             dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvOrders.Size = new Size(1129, 395);
             dgvOrders.TabIndex = 0;
             dgvOrders.SelectionChanged += dgvOrders_SelectionChanged;
+            // 
+            // OrderId
+            // 
+            OrderId.DataPropertyName = "OrderId";
+            OrderId.HeaderText = "Номер заказа";
+            OrderId.Name = "OrderId";
+            OrderId.ReadOnly = true;
+            // 
+            // OwnershipId
+            // 
+            OwnershipId.DataPropertyName = "OwnershipId";
+            OwnershipId.HeaderText = "OwnershipId";
+            OwnershipId.Name = "OwnershipId";
+            OwnershipId.ReadOnly = true;
+            OwnershipId.Visible = false;
+            // 
+            // ClientId
+            // 
+            ClientId.DataPropertyName = "ClientId";
+            ClientId.HeaderText = "ClientId";
+            ClientId.Name = "ClientId";
+            ClientId.ReadOnly = true;
+            ClientId.Visible = false;
+            // 
+            // CarId
+            // 
+            CarId.DataPropertyName = "CarId";
+            CarId.HeaderText = "CarId";
+            CarId.Name = "CarId";
+            CarId.ReadOnly = true;
+            CarId.Visible = false;
+            // 
+            // ClientFullName
+            // 
+            ClientFullName.DataPropertyName = "ClientFullName";
+            ClientFullName.HeaderText = "Клиент";
+            ClientFullName.Name = "ClientFullName";
+            ClientFullName.ReadOnly = true;
+            // 
+            // CarFullName
+            // 
+            CarFullName.DataPropertyName = "CarFullName";
+            CarFullName.HeaderText = "Автомобиль";
+            CarFullName.Name = "CarFullName";
+            CarFullName.ReadOnly = true;
+            // 
+            // AppointmentDate
+            // 
+            AppointmentDate.DataPropertyName = "AppointmentDate";
+            AppointmentDate.HeaderText = "Дата приема";
+            AppointmentDate.Name = "AppointmentDate";
+            AppointmentDate.ReadOnly = true;
+            // 
+            // CompletionDate
+            // 
+            CompletionDate.DataPropertyName = "CompletionDate";
+            CompletionDate.HeaderText = "Дата выпуска";
+            CompletionDate.Name = "CompletionDate";
+            CompletionDate.ReadOnly = true;
+            // 
+            // Sum
+            // 
+            Sum.DataPropertyName = "Sum";
+            Sum.HeaderText = "Сумма";
+            Sum.Name = "Sum";
+            Sum.ReadOnly = true;
+            // 
+            // StatusId
+            // 
+            StatusId.DataPropertyName = "StatusId";
+            StatusId.HeaderText = "StatusId";
+            StatusId.Name = "StatusId";
+            StatusId.ReadOnly = true;
+            StatusId.Visible = false;
+            // 
+            // StatusName
+            // 
+            StatusName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            StatusName.DataPropertyName = "StatusName";
+            StatusName.HeaderText = "Статус";
+            StatusName.Name = "StatusName";
+            StatusName.ReadOnly = true;
             // 
             // toolStrip1
             // 
@@ -126,11 +216,40 @@
             // tsddbBases
             // 
             tsddbBases.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            tsddbBases.DropDownItems.AddRange(new ToolStripItem[] { клиентыToolStripMenuItem, автомобилиToolStripMenuItem, услугиToolStripMenuItem, сотрудникиToolStripMenuItem });
             tsddbBases.Image = (Image)resources.GetObject("tsddbBases.Image");
             tsddbBases.ImageTransparentColor = Color.Magenta;
             tsddbBases.Name = "tsddbBases";
             tsddbBases.Size = new Size(95, 22);
             tsddbBases.Text = "Справочники";
+            // 
+            // клиентыToolStripMenuItem
+            // 
+            клиентыToolStripMenuItem.Name = "клиентыToolStripMenuItem";
+            клиентыToolStripMenuItem.Size = new Size(144, 22);
+            клиентыToolStripMenuItem.Text = "Клиенты";
+            клиентыToolStripMenuItem.Click += клиентыToolStripMenuItem_Click;
+            // 
+            // автомобилиToolStripMenuItem
+            // 
+            автомобилиToolStripMenuItem.Name = "автомобилиToolStripMenuItem";
+            автомобилиToolStripMenuItem.Size = new Size(144, 22);
+            автомобилиToolStripMenuItem.Text = "Автомобили";
+            автомобилиToolStripMenuItem.Click += автомобилиToolStripMenuItem_Click;
+            // 
+            // услугиToolStripMenuItem
+            // 
+            услугиToolStripMenuItem.Name = "услугиToolStripMenuItem";
+            услугиToolStripMenuItem.Size = new Size(144, 22);
+            услугиToolStripMenuItem.Text = "Услуги";
+            услугиToolStripMenuItem.Click += услугиToolStripMenuItem_Click;
+            // 
+            // сотрудникиToolStripMenuItem
+            // 
+            сотрудникиToolStripMenuItem.Name = "сотрудникиToolStripMenuItem";
+            сотрудникиToolStripMenuItem.Size = new Size(144, 22);
+            сотрудникиToolStripMenuItem.Text = "Сотрудники";
+            сотрудникиToolStripMenuItem.Click += сотрудникиToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -140,11 +259,33 @@
             // tsddbReports
             // 
             tsddbReports.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            tsddbReports.DropDownItems.AddRange(new ToolStripItem[] { отчетОМастерахToolStripMenuItem, отчетОВыполненныхУслугахToolStripMenuItem, отчетОЗаказахToolStripMenuItem });
             tsddbReports.Image = (Image)resources.GetObject("tsddbReports.Image");
             tsddbReports.ImageTransparentColor = Color.Magenta;
             tsddbReports.Name = "tsddbReports";
             tsddbReports.Size = new Size(61, 22);
             tsddbReports.Text = "Отчеты";
+            // 
+            // отчетОМастерахToolStripMenuItem
+            // 
+            отчетОМастерахToolStripMenuItem.Name = "отчетОМастерахToolStripMenuItem";
+            отчетОМастерахToolStripMenuItem.Size = new Size(242, 22);
+            отчетОМастерахToolStripMenuItem.Text = "Отчет о мастерах";
+            отчетОМастерахToolStripMenuItem.Click += отчетОМастерахToolStripMenuItem_Click;
+            // 
+            // отчетОВыполненныхУслугахToolStripMenuItem
+            // 
+            отчетОВыполненныхУслугахToolStripMenuItem.Name = "отчетОВыполненныхУслугахToolStripMenuItem";
+            отчетОВыполненныхУслугахToolStripMenuItem.Size = new Size(242, 22);
+            отчетОВыполненныхУслугахToolStripMenuItem.Text = "Отчет о выполненных услугах";
+            отчетОВыполненныхУслугахToolStripMenuItem.Click += отчетОВыполненныхУслугахToolStripMenuItem_Click;
+            // 
+            // отчетОЗаказахToolStripMenuItem
+            // 
+            отчетОЗаказахToolStripMenuItem.Name = "отчетОЗаказахToolStripMenuItem";
+            отчетОЗаказахToolStripMenuItem.Size = new Size(242, 22);
+            отчетОЗаказахToolStripMenuItem.Text = "Отчет о заказах";
+            отчетОЗаказахToolStripMenuItem.Click += отчетОЗаказахToolStripMenuItem_Click;
             // 
             // label1
             // 
@@ -179,6 +320,7 @@
             dgvOrderDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvOrderDetails.Size = new Size(696, 182);
             dgvOrderDetails.TabIndex = 4;
+            dgvOrderDetails.SelectionChanged += dgvOrderDetails_SelectionChanged;
             // 
             // ServiceId
             // 
@@ -287,7 +429,7 @@
             // 
             // gbOrder
             // 
-            gbOrder.Controls.Add(gbOrders);
+            gbOrder.Controls.Add(tcOrders);
             gbOrder.Location = new Point(12, 470);
             gbOrder.Name = "gbOrder";
             gbOrder.Size = new Size(415, 331);
@@ -295,15 +437,15 @@
             gbOrder.TabStop = false;
             gbOrder.Text = "Работа с заказами";
             // 
-            // gbOrders
+            // tcOrders
             // 
-            gbOrders.Controls.Add(tpNewOrder);
-            gbOrders.Controls.Add(tpCurrentOrder);
-            gbOrders.Location = new Point(6, 22);
-            gbOrders.Name = "gbOrders";
-            gbOrders.SelectedIndex = 0;
-            gbOrders.Size = new Size(403, 298);
-            gbOrders.TabIndex = 0;
+            tcOrders.Controls.Add(tpNewOrder);
+            tcOrders.Controls.Add(tpCurrentOrder);
+            tcOrders.Location = new Point(6, 22);
+            tcOrders.Name = "tcOrders";
+            tcOrders.SelectedIndex = 0;
+            tcOrders.Size = new Size(403, 298);
+            tcOrders.TabIndex = 0;
             // 
             // tpNewOrder
             // 
@@ -408,7 +550,7 @@
             // tpCurrentOrder
             // 
             tpCurrentOrder.Controls.Add(bntEditOrder);
-            tpCurrentOrder.Controls.Add(dptDateToEdit);
+            tpCurrentOrder.Controls.Add(dtpDateToEdit);
             tpCurrentOrder.Controls.Add(label6);
             tpCurrentOrder.Controls.Add(btnDeleteOrder);
             tpCurrentOrder.Controls.Add(cbCarsToEdit);
@@ -433,12 +575,12 @@
             bntEditOrder.UseVisualStyleBackColor = true;
             bntEditOrder.Click += bntEditOrder_Click;
             // 
-            // dptDateToEdit
+            // dtpDateToEdit
             // 
-            dptDateToEdit.Location = new Point(6, 135);
-            dptDateToEdit.Name = "dptDateToEdit";
-            dptDateToEdit.Size = new Size(200, 23);
-            dptDateToEdit.TabIndex = 16;
+            dtpDateToEdit.Location = new Point(6, 135);
+            dtpDateToEdit.Name = "dtpDateToEdit";
+            dtpDateToEdit.Size = new Size(200, 23);
+            dtpDateToEdit.TabIndex = 16;
             // 
             // label6
             // 
@@ -573,76 +715,6 @@
             btnActiveOrders.UseVisualStyleBackColor = true;
             btnActiveOrders.Click += btnActiveOrders_Click;
             // 
-            // OrderId
-            // 
-            OrderId.DataPropertyName = "OrderId";
-            OrderId.HeaderText = "Номер заказа";
-            OrderId.Name = "OrderId";
-            // 
-            // OwnershipId
-            // 
-            OwnershipId.DataPropertyName = "OwnershipId";
-            OwnershipId.HeaderText = "OwnershipId";
-            OwnershipId.Name = "OwnershipId";
-            OwnershipId.Visible = false;
-            // 
-            // ClientId
-            // 
-            ClientId.DataPropertyName = "ClientId";
-            ClientId.HeaderText = "ClientId";
-            ClientId.Name = "ClientId";
-            ClientId.Visible = false;
-            // 
-            // CarId
-            // 
-            CarId.DataPropertyName = "CarId";
-            CarId.HeaderText = "CarId";
-            CarId.Name = "CarId";
-            CarId.Visible = false;
-            // 
-            // ClientFullName
-            // 
-            ClientFullName.DataPropertyName = "ClientFullName";
-            ClientFullName.HeaderText = "Клиент";
-            ClientFullName.Name = "ClientFullName";
-            // 
-            // CarFullName
-            // 
-            CarFullName.DataPropertyName = "CarFullName";
-            CarFullName.HeaderText = "Автомобиль";
-            CarFullName.Name = "CarFullName";
-            // 
-            // AppointmentDate
-            // 
-            AppointmentDate.DataPropertyName = "AppointmentDate";
-            AppointmentDate.HeaderText = "Дата приема";
-            AppointmentDate.Name = "AppointmentDate";
-            // 
-            // CompletionDate
-            // 
-            CompletionDate.DataPropertyName = "CompletionDate";
-            CompletionDate.HeaderText = "Дата выпуска";
-            CompletionDate.Name = "CompletionDate";
-            // 
-            // Sum
-            // 
-            Sum.DataPropertyName = "Sum";
-            Sum.HeaderText = "Сумма";
-            Sum.Name = "Sum";
-            // 
-            // StatusId
-            // 
-            StatusId.DataPropertyName = "StatusId";
-            StatusId.HeaderText = "StatusId";
-            StatusId.Name = "StatusId";
-            // 
-            // StatusName
-            // 
-            StatusName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            StatusName.DataPropertyName = "StatusName";
-            StatusName.HeaderText = "Статус";
-            StatusName.Name = "StatusName";
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -665,7 +737,7 @@
             toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvOrderDetails).EndInit();
             gbOrder.ResumeLayout(false);
-            gbOrders.ResumeLayout(false);
+            tcOrders.ResumeLayout(false);
             tpNewOrder.ResumeLayout(false);
             tpNewOrder.PerformLayout();
             tpCurrentOrder.ResumeLayout(false);
@@ -692,7 +764,7 @@
         private Button btnOpenAddServiceForm;
         private Button btnEditWorker;
         private GroupBox gbOrder;
-        private TabControl gbOrders;
+        private TabControl tcOrders;
         private TabPage tpNewOrder;
         private TabPage tpCurrentOrder;
         private Label label5;
@@ -706,7 +778,7 @@
         private Button btnCreateOrder;
         private GroupBox gbOrderDetails;
         private Button bntEditOrder;
-        private DateTimePicker dptDateToEdit;
+        private DateTimePicker dtpDateToEdit;
         private Label label6;
         private ComboBox cbCarsToEdit;
         private Label label8;
@@ -726,6 +798,10 @@
         private Button btnStatusЗаявка;
         private Button btnAllOrders;
         private Button btnActiveOrders;
+        private ToolStripMenuItem клиентыToolStripMenuItem;
+        private ToolStripMenuItem автомобилиToolStripMenuItem;
+        private ToolStripMenuItem услугиToolStripMenuItem;
+        private ToolStripMenuItem сотрудникиToolStripMenuItem;
         private DataGridViewTextBoxColumn OrderId;
         private DataGridViewTextBoxColumn OwnershipId;
         private DataGridViewTextBoxColumn ClientId;
@@ -737,5 +813,8 @@
         private DataGridViewTextBoxColumn Sum;
         private DataGridViewTextBoxColumn StatusId;
         private DataGridViewTextBoxColumn StatusName;
+        private ToolStripMenuItem отчетОМастерахToolStripMenuItem;
+        private ToolStripMenuItem отчетОВыполненныхУслугахToolStripMenuItem;
+        private ToolStripMenuItem отчетОЗаказахToolStripMenuItem;
     }
 }
