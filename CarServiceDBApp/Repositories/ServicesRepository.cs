@@ -14,6 +14,11 @@ namespace CarServiceDBApp.Repositories
             connectionString = ConfigurationManager.ConnectionStrings["CarService"].ToString();
         }
 
+        public ServicesRepository(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+
         public DataTable GetAllServices()
         {
             DataTable dataTable = new DataTable();
@@ -43,7 +48,7 @@ namespace CarServiceDBApp.Repositories
             return dataTable;
         }
 
-        public DataTable GetAllServicesWithoutDescription()
+        public DataTable GetAllServicesWithoutReception()
         {
             DataTable dataTable = new DataTable();
 

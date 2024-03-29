@@ -24,7 +24,7 @@ namespace CarServiceDBApp.Forms
         {
             try
             {
-                dgvServices.DataSource = servicesRepository.GetAllServicesWithoutDescription();
+                dgvServices.DataSource = servicesRepository.GetAllServicesWithoutReception();
             }
             catch (MySqlException ex)
             {

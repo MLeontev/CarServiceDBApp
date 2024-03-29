@@ -16,45 +16,33 @@ namespace CarServiceDBApp.Repositories
         public DataTable GetClients()
         {
             DataTable dataTable = new DataTable();
-
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                connection.Open();
+
+                string query = @"
+                    SELECT
+                        Clients.id AS ClientId,
+                        CONCAT(Clients.surname, ' ', Clients.name, ' ', IFNULL(Clients.patronymic, ''))
+                            AS ClientFullName,
+                        Clients.birth_date AS ClientBirthDate,
+                        Clients.phone_number AS ClientPhoneNumber,
+                        Clients.email AS ClientEmail
+                    FROM 
+                        Clients
+                    ORDER BY 
+                        Clients.surname
+                    ";
+
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    connection.Open();
-
-                    string query = @"
-                        SELECT
-                            Clients.id AS ClientId,
-                            CONCAT(Clients.surname, ' ', Clients.name, ' ', IFNULL(Clients.patronymic, '')) AS ClientFullName,
-                            Clients.birth_date AS ClientBirthDate,
-                            Clients.phone_number AS ClientPhoneNumber,
-                            Clients.email AS ClientEmail
-                        FROM 
-                            Clients
-                        ORDER BY 
-                            Clients.surname
-                       ";
-
-
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
                     {
-                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
-                        {
-                            adapter.Fill(dataTable);
-                        }
+                        adapter.Fill(dataTable);
                     }
                 }
             }
-            catch (MySqlException ex)
-            {
-                MessageBox.Show("Ошибка при работе с базой данных: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
             return dataTable;
         }
 

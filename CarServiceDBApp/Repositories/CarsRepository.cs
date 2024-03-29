@@ -128,7 +128,14 @@ namespace CarServiceDBApp.Repositories
             {
                 connection.Open();
 
-                string query = "UPDATE Cars set brand = @brand, model = @model, registration_number = @number, VIN = @vin, year = @year, mileage = @mileage WHERE id = @id";
+                string query = @"UPDATE Cars set
+                                    brand = @brand,
+                                    model = @model,
+                                    registration_number = @number,
+                                    VIN = @vin,
+                                    year = @year,
+                                    mileage = @mileage
+                                WHERE id = @id";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {

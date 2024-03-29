@@ -25,7 +25,7 @@ namespace CarServiceDBApp.Forms
             servicesRepository = new();
             workersRepository = new();
 
-            dgvServicesToOrder.DataSource = servicesRepository.GetAllServicesWithoutDescription();
+            dgvServicesToOrder.DataSource = servicesRepository.GetAllServicesWithoutReception();
             FillReceptionistsComboBox();
         }
 

@@ -599,7 +599,7 @@ namespace CarServiceDBApp
 
                     using (ExcelPackage excelPackage = new ExcelPackage())
                     {
-                        ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Отчет о мастерах");
+                        ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Отчет о выполненных услугах");
 
                         worksheet.Column(1).Width = 29;
                         worksheet.Column(2).Width = 14;
@@ -620,7 +620,9 @@ namespace CarServiceDBApp
 
                         worksheet.Cells["A5"].LoadFromDataTable(reportData, false);
 
-                        FileInfo excelFile = new FileInfo($"Отчет о выполненных услугах {startDate.ToShortDateString()}-{endDate.ToShortDateString()}.xlsx");
+                        FileInfo excelFile = new FileInfo(
+                            $"Отчет о выполненных услугах {startDate.ToShortDateString()}-{endDate.ToShortDateString()}.xlsx"
+                        );
 
                         excelPackage.SaveAs(excelFile);
 
@@ -654,7 +656,7 @@ namespace CarServiceDBApp
 
                     using (ExcelPackage excelPackage = new ExcelPackage())
                     {
-                        ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Отчет о мастерах");
+                        ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Отчет о заказах");
 
                         worksheet.Column(1).Width = 20;
                         worksheet.Column(2).Width = 32;
