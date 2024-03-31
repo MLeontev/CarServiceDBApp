@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="7.0.10" />
+    <PackageReference Include="EPPlus" Version="7.1.0" />
     <PackageReference Include="MySql.Data" Version="8.3.0" />
   </ItemGroup>
 

@@ -2,8 +2,10 @@ using CarServiceDBApp.Forms;
 using CarServiceDBApp.Helpers;
 using CarServiceDBApp.Repositories;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 using OfficeOpenXml;
 using System.Data;
+using System.Globalization;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace CarServiceDBApp
@@ -20,6 +22,7 @@ namespace CarServiceDBApp
         ReportsRepository reportsRepository;
 
         bool onlyActiveOrders;
+        public bool OnlyActiveOrders { get => onlyActiveOrders; set => onlyActiveOrders = value; }
 
         public MainForm()
         {
@@ -34,10 +37,22 @@ namespace CarServiceDBApp
             statusRepository = new();
             reportsRepository = new();
 
-            onlyActiveOrders = true;
+            OnlyActiveOrders = true;
             btnActiveOrders.Enabled = false;
 
             UpadateAll();
+        }
+
+        private void HandleDatabaseError(MySqlException ex)
+        {
+            if (ex.Number == 1062)
+            {
+                ErrorHandler.ShowErrorMessage("Заказ с указанными данными уже создан");
+            }
+            else
+            {
+                ErrorHandler.ShowErrorMessage("Ошибка при работе с базой данных: " + ex.Message);
+            }
         }
 
         public void UpadateAll()
@@ -49,29 +64,44 @@ namespace CarServiceDBApp
 
         private void btnAllOrders_Click(object sender, EventArgs e)
         {
-            onlyActiveOrders = false;
+            OnlyActiveOrders = false;
+
             btnAllOrders.Enabled = false;
             btnActiveOrders.Enabled = true;
+
             UpdateOrders();
         }
 
         private void btnActiveOrders_Click(object sender, EventArgs e)
         {
-            onlyActiveOrders = true;
+            OnlyActiveOrders = true;
+
             btnAllOrders.Enabled = true;
             btnActiveOrders.Enabled = false;
+
             UpdateOrders();
         }
 
         public void UpdateOrders()
         {
-            if (onlyActiveOrders)
+            try
             {
-                dgvOrders.DataSource = ordersRepository.GetActiveOrders();
+                if (OnlyActiveOrders)
+                {
+                    dgvOrders.DataSource = ordersRepository.GetActiveOrders();
+                }
+                else
+                {
+                    dgvOrders.DataSource = ordersRepository.GetAllOrders();
+                }
             }
-            else
+            catch (MySqlException ex)
             {
-                dgvOrders.DataSource = ordersRepository.GetAllOrders();
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
@@ -82,284 +112,71 @@ namespace CarServiceDBApp
 
         private void dgvOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count == 1)
+            try
             {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
-
-                LoadClientsToEdit();
-
-                dtpDateToEdit.Value = (DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value;
-
-                int statusId = (int)dgvOrders.SelectedRows[0].Cells["StatusId"].Value;
-                if (statusId == 1)
+                if (dgvOrders.SelectedRows.Count == 1)
                 {
-                    btnStatusЗаявка.Enabled = false;
-                    btnStatusВРаботе.Enabled = true;
-                    btnStatusВыполнен.Enabled = true;
-                    btnStatusОтменен.Enabled = true;
-
-                    bntEditOrder.Enabled = true;
-
-                    gbOrderDetails.Enabled = true;
-                }
-                else if (statusId == 2)
-                {
-                    btnStatusЗаявка.Enabled = false;
-                    btnStatusВРаботе.Enabled = false;
-                    btnStatusВыполнен.Enabled = true;
-                    btnStatusОтменен.Enabled = true;
-
-                    bntEditOrder.Enabled = true;
-
-                    gbOrderDetails.Enabled = true;
-                }
-                else if (statusId == 3)
-                {
-                    btnStatusЗаявка.Enabled = false;
-                    btnStatusВРаботе.Enabled = false;
-                    btnStatusВыполнен.Enabled = false;
-                    btnStatusОтменен.Enabled = false;
-
-                    bntEditOrder.Enabled = false;
-
-                    gbOrderDetails.Enabled = false;
-                }
-                else if (statusId == 4)
-                {
-                    btnStatusЗаявка.Enabled = false;
-                    btnStatusВРаботе.Enabled = false;
-                    btnStatusВыполнен.Enabled = false;
-                    btnStatusОтменен.Enabled = false;
-
-                    bntEditOrder.Enabled = false;
-
-                    gbOrderDetails.Enabled = false;
-                }
-            }
-        }
-
-        private void btnDeleteOrder_Click(object sender, EventArgs e)
-        {
-            if (dgvOrders.SelectedRows.Count == 1)
-            {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                ordersRepository.DeleteOrderById(orderId);
-                dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
-            }
-            else
-            {
-                MessageBox.Show("Выберите один заказ для удаления", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void btnDeleteServiceFromOrder_Click(object sender, EventArgs e)
-        {
-            if (dgvOrderDetails.SelectedRows.Count == 1)
-            {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
-
-                if (Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["ServiceId"].Value) != 1)
-                {
-                    orderDetailsRepository.DeleteServiceFromOrder(orderDetailsId);
-                    dgvOrderDetails.Rows.RemoveAt(dgvOrderDetails.SelectedRows[0].Index);
-
-                    dgvOrders.SelectedRows[0].Cells["Sum"].Value = ordersRepository.GetOrderSum(orderId);
-                }
-                else
-                {
-                    MessageBox.Show("Нельзя удалить прием. Вы можете изменить исполнителя.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Выберите одну услугу для удаления", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void btnCompleteService_Click(object sender, EventArgs e)
-        {
-            if (dgvOrderDetails.SelectedRows.Count == 1)
-            {
-                int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
-                orderDetailsRepository.CompleteService(orderDetailsId);
-                dgvOrderDetails.SelectedRows[0].Cells["Status"].Value = "Выполнена";
-            }
-            else
-            {
-                MessageBox.Show("Выберите одну услугу для выполнения", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void btnOpenAddServiceForm_Click(object sender, EventArgs e)
-        {
-            AddServiceToOrderForm addServiceToOrderForm = new AddServiceToOrderForm();
-            if (addServiceToOrderForm.ShowDialog() == DialogResult.OK)
-            {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                int serviceId = addServiceToOrderForm.ServiceId_prop;
-                int workerId = addServiceToOrderForm.WorkerId;
-                orderDetailsRepository.AddServiceToOrder(orderId, serviceId, workerId);
-
-                orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
-
-                dgvOrders.SelectedRows[0].Cells["Sum"].Value = ordersRepository.GetOrderSum(orderId);
-            }
-        }
-
-        private void btnEditWorker_Click(object sender, EventArgs e)
-        {
-            if (dgvOrderDetails.SelectedRows.Count == 1)
-            {
-                int serviceId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["ServiceId"].Value);
-
-                EditServiceInOrderForm editForm = new(serviceId);
-
-                if (editForm.ShowDialog() == DialogResult.OK)
-                {
-                    int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
-                    int workerId = editForm.WorkerId_prop;
-                    orderDetailsRepository.EditWorkerInOrderDetails(orderDetailsId, workerId);
-
                     int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
                     dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
+
+                    LoadClientsToEdit();
+
+                    dtpDateToEdit.Value = (DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value;
+
+                    int statusId = (int)dgvOrders.SelectedRows[0].Cells["StatusId"].Value;
+                    if (statusId == 1)
+                    {
+                        btnStatusЗаявка.Enabled = false;
+                        btnStatusВРаботе.Enabled = true;
+                        btnStatusВыполнен.Enabled = true;
+                        btnStatusОтменен.Enabled = true;
+
+                        bntEditOrder.Enabled = true;
+
+                        gbOrderDetails.Enabled = true;
+                    }
+                    else if (statusId == 2)
+                    {
+                        btnStatusЗаявка.Enabled = false;
+                        btnStatusВРаботе.Enabled = false;
+                        btnStatusВыполнен.Enabled = true;
+                        btnStatusОтменен.Enabled = true;
+
+                        bntEditOrder.Enabled = true;
+
+                        gbOrderDetails.Enabled = true;
+                    }
+                    else if (statusId == 3)
+                    {
+                        btnStatusЗаявка.Enabled = false;
+                        btnStatusВРаботе.Enabled = false;
+                        btnStatusВыполнен.Enabled = false;
+                        btnStatusОтменен.Enabled = false;
+
+                        bntEditOrder.Enabled = false;
+
+                        gbOrderDetails.Enabled = false;
+                    }
+                    else if (statusId == 4)
+                    {
+                        btnStatusЗаявка.Enabled = false;
+                        btnStatusВРаботе.Enabled = false;
+                        btnStatusВыполнен.Enabled = false;
+                        btnStatusОтменен.Enabled = false;
+
+                        bntEditOrder.Enabled = false;
+
+                        gbOrderDetails.Enabled = false;
+                    }
                 }
             }
-            else
+            catch (MySqlException ex)
             {
-                MessageBox.Show("Выберите одну услугу для изменения", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                HandleDatabaseError(ex);
             }
-        }
-
-        private void LoadClientsToAdd()
-        {
-            DataTable clientsDataTable = clientsRepository.GetClients();
-            cbClientsToAdd.DataSource = clientsDataTable;
-            cbClientsToAdd.ValueMember = "ClientId";
-            cbClientsToAdd.DisplayMember = "ClientFullName";
-        }
-
-        private void LoadWorkersToAdd()
-        {
-            DataTable workersDataTable = workersRepository.GetReceptionists();
-            cbWorkersToAdd.DataSource = workersDataTable;
-            cbWorkersToAdd.ValueMember = "WorkerId";
-            cbWorkersToAdd.DisplayMember = "WorkerFullName";
-        }
-
-        private void LoadCarsToAdd(int clientId)
-        {
-            DataTable carsDataTable = carsRepository.GetCarNamesByClientId(clientId);
-            cbCarsToAdd.DataSource = carsDataTable;
-            cbCarsToAdd.ValueMember = "CarId";
-            cbCarsToAdd.DisplayMember = "CarFullName";
-        }
-
-        private void cbClientsToAdd_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbClientsToAdd != null)
+            catch (Exception ex)
             {
-                DataRowView drv = (DataRowView)cbClientsToAdd.SelectedItem;
-                int clientId = Convert.ToInt32(drv["ClientId"]);
-
-                LoadCarsToAdd(clientId);
-            }
-        }
-
-        private void btnCreateOrder_Click(object sender, EventArgs e)
-        {
-            DataRowView drvClient = (DataRowView)cbClientsToAdd.SelectedItem;
-            int clientId = Convert.ToInt32(drvClient["ClientId"]);
-
-            DataRowView drvCar = (DataRowView)cbCarsToAdd.SelectedItem;
-            int carId = Convert.ToInt32(drvCar["CarId"]);
-
-            int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
-
-            DataRowView drvWorker = (DataRowView)cbWorkersToAdd.SelectedItem;
-            int workerId = Convert.ToInt32(drvWorker["WorkerId"]);
-
-            DateTime dateTime = dptDateToAdd.Value;
-
-            ordersRepository.CreateOrder(ownershipId, dateTime, workerId);
-
-            UpdateOrders();
-        }
-
-        private void LoadClientsToEdit()
-        {
-            DataTable clientsDataTable = clientsRepository.GetClients();
-            cbClientsToEdit.DataSource = clientsDataTable;
-            cbClientsToEdit.ValueMember = "ClientId";
-            cbClientsToEdit.DisplayMember = "ClientFullName";
-            var clientIdToSelect = Convert.ToInt32(dgvOrders.CurrentRow.Cells["ClientId"].Value);
-            cbClientsToEdit.SelectedValue = clientIdToSelect;
-        }
-
-        private void LoadCarsToEdit(int clientId)
-        {
-            DataTable carsDataTable = carsRepository.GetCarNamesByClientId(clientId);
-            cbCarsToEdit.DataSource = carsDataTable;
-            cbCarsToEdit.ValueMember = "CarId";
-            cbCarsToEdit.DisplayMember = "CarFullName";
-            var carIdToSelect = Convert.ToInt32(dgvOrders.CurrentRow.Cells["CarId"].Value);
-            cbCarsToEdit.SelectedValue = carIdToSelect;
-        }
-
-        private void cbClientsToEdit_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbClientsToAdd != null)
-            {
-                DataRowView drv = (DataRowView)cbClientsToEdit.SelectedItem;
-                int clientId = Convert.ToInt32(drv["ClientId"]);
-
-                LoadCarsToEdit(clientId);
-            }
-        }
-
-        private void bntEditOrder_Click(object sender, EventArgs e)
-        {
-            if (dgvOrders.SelectedRows.Count == 1)
-            {
-                if (dgvOrders.SelectedRows.Count == 0)
-                {
-                    MessageBox.Show("Выберите заказ для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (cbClientsToEdit.SelectedItem == null)
-                {
-                    MessageBox.Show("Выберите клиента для редактирования заказа.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (cbCarsToEdit.SelectedItem == null)
-                {
-                    MessageBox.Show("Выберите автомобиль для редактирования заказа.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-
-                DataRowView drvClient = (DataRowView)cbClientsToEdit.SelectedItem;
-                int clientId = Convert.ToInt32(drvClient["ClientId"]);
-
-                DataRowView drvCar = (DataRowView)cbCarsToEdit.SelectedItem;
-                int carId = Convert.ToInt32(drvCar["CarId"]);
-
-                int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
-
-                DateTime dateTime = dtpDateToEdit.Value;
-
-                ordersRepository.UpdateOrder(orderId, ownershipId, dateTime);
-
-                UpdateOrders();
-            }
-            else
-            {
-                MessageBox.Show("Выберите один заказ для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
@@ -378,9 +195,13 @@ namespace CarServiceDBApp
 
                 dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 1;
             }
+            else if (dgvOrders.SelectedRows.Count == 0)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+            }
             else
             {
-                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
             }
         }
 
@@ -399,9 +220,13 @@ namespace CarServiceDBApp
 
                 dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 2;
             }
+            else if (dgvOrders.SelectedRows.Count == 0)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+            }
             else
             {
-                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
             }
         }
 
@@ -444,16 +269,20 @@ namespace CarServiceDBApp
 
                         dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 3;
 
-                        if (onlyActiveOrders)
+                        if (OnlyActiveOrders)
                         {
                             dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
                         }
                     }
                 }
             }
+            else if (dgvOrders.SelectedRows.Count == 0)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+            }
             else
             {
-                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
             }
         }
 
@@ -472,58 +301,457 @@ namespace CarServiceDBApp
 
                 dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 4;
 
-                if (onlyActiveOrders)
+                if (OnlyActiveOrders)
                 {
                     dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
                 }
             }
+            else if (dgvOrders.SelectedRows.Count == 0)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+            }
             else
             {
-                MessageBox.Show("Выберите только один заказ для изменения статуса.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+            }
+        }
+
+        private void btnDeleteOrder_Click(object sender, EventArgs e)
+        {
+            if (dgvOrders.SelectedRows.Count == 1)
+            {
+                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                ordersRepository.DeleteOrderById(orderId);
+                dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+            }
+            else
+            {
+                MessageBox.Show("Выберите один заказ для удаления", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnDeleteServiceFromOrder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvOrderDetails.SelectedRows.Count == 1)
+                {
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
+
+                    if (Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["ServiceId"].Value) != 1)
+                    {
+                        orderDetailsRepository.DeleteServiceFromOrder(orderDetailsId);
+                        dgvOrderDetails.Rows.RemoveAt(dgvOrderDetails.SelectedRows[0].Index);
+
+                        dgvOrders.SelectedRows[0].Cells["Sum"].Value = ordersRepository.GetOrderSum(orderId);
+                    }
+                    else
+                    {
+                        ErrorHandler.ShowWarningMessage("Нельзя удалить прием. Вы можете изменить исполнителя");
+                    }
+                }
+                else if (dgvOrderDetails.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите услугу для удаления");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только одну услугу для удаления");
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
+            }
+        }
+
+        private void btnCompleteService_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvOrderDetails.SelectedRows.Count == 1)
+                {
+                    int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
+                    orderDetailsRepository.CompleteService(orderDetailsId);
+                    dgvOrderDetails.SelectedRows[0].Cells["Status"].Value = "Выполнена";
+                }
+                else if (dgvOrderDetails.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите услугу для выполнения");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только одну услугу для выполнения");
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
+            }
+        }
+
+        private void btnOpenAddServiceForm_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AddServiceToOrderForm addServiceToOrderForm = new AddServiceToOrderForm();
+                if (addServiceToOrderForm.ShowDialog() == DialogResult.OK)
+                {
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    int serviceId = addServiceToOrderForm.ServiceId_prop;
+                    int workerId = addServiceToOrderForm.WorkerId;
+                    orderDetailsRepository.AddServiceToOrder(orderId, serviceId, workerId);
+
+                    orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
+
+                    dgvOrders.SelectedRows[0].Cells["Sum"].Value = ordersRepository.GetOrderSum(orderId);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
+            }
+        }
+
+        private void btnEditWorker_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvOrderDetails.SelectedRows.Count == 1)
+                {
+                    int serviceId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["ServiceId"].Value);
+
+                    EditServiceInOrderForm editForm = new(serviceId);
+
+                    if (editForm.ShowDialog() == DialogResult.OK)
+                    {
+                        int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
+                        int workerId = editForm.WorkerId_prop;
+                        orderDetailsRepository.EditWorkerInOrderDetails(orderDetailsId, workerId);
+
+                        int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                        dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
+                    }
+                }
+                else if (dgvOrderDetails.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите услугу для изменения");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только одну услугу для изменения");
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
+            }
+        }
+
+        private void LoadClientsToAdd()
+        {
+            try
+            {
+                DataTable clientsDataTable = clientsRepository.GetClients();
+                cbClientsToAdd.DataSource = clientsDataTable;
+                cbClientsToAdd.ValueMember = "ClientId";
+                cbClientsToAdd.DisplayMember = "ClientFullName";
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить клиентов");
+            }
+        }
+
+        private void LoadWorkersToAdd()
+        {
+            try
+            {
+                DataTable workersDataTable = workersRepository.GetReceptionists();
+                cbWorkersToAdd.DataSource = workersDataTable;
+                cbWorkersToAdd.ValueMember = "WorkerId";
+                cbWorkersToAdd.DisplayMember = "WorkerFullName";
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить мастеров");
+            }
+        }
+
+        private void LoadCarsToAdd(int clientId)
+        {
+            try
+            {
+                DataTable carsDataTable = carsRepository.GetCarNamesByClientId(clientId);
+                cbCarsToAdd.DataSource = carsDataTable;
+                cbCarsToAdd.ValueMember = "CarId";
+                cbCarsToAdd.DisplayMember = "CarFullName";
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить автомобили");
+            }
+        }
+
+        private void cbClientsToAdd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbClientsToAdd != null)
+                {
+                    DataRowView drv = (DataRowView)cbClientsToAdd.SelectedItem;
+                    int clientId = Convert.ToInt32(drv["ClientId"]);
+
+                    LoadCarsToAdd(clientId);
+                }
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить автомобили");
+            }
+        }
+
+        private void btnCreateOrder_Click(object sender, EventArgs e)
+        {
+            if (cbClientsToAdd.SelectedItem == null)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите клиента для создания заказа");
+                return;
+            }
+
+            if (cbCarsToAdd.SelectedItem == null)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите автомобиль для создания заказа");
+                return;
+            }
+
+            if (cbWorkersToAdd.SelectedItem == null)
+            {
+                ErrorHandler.ShowWarningMessage("Выберите мастера-приемщика для создания заказа");
+                return;
+            }
+
+            DataRowView drvClient = (DataRowView)cbClientsToAdd.SelectedItem;
+            int clientId = Convert.ToInt32(drvClient["ClientId"]);
+
+            DataRowView drvCar = (DataRowView)cbCarsToAdd.SelectedItem;
+            int carId = Convert.ToInt32(drvCar["CarId"]);
+
+            int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
+
+            DataRowView drvWorker = (DataRowView)cbWorkersToAdd.SelectedItem;
+            int workerId = Convert.ToInt32(drvWorker["WorkerId"]);
+
+            DateTime dateTime = dptDateToAdd.Value;
+
+            ordersRepository.CreateOrder(ownershipId, dateTime, workerId);
+
+            UpdateOrders();
+        }
+
+        private void LoadClientsToEdit()
+        {
+            try
+            {
+                DataTable clientsDataTable = clientsRepository.GetClients();
+                cbClientsToEdit.DataSource = clientsDataTable;
+                cbClientsToEdit.ValueMember = "ClientId";
+                cbClientsToEdit.DisplayMember = "ClientFullName";
+                var clientIdToSelect = Convert.ToInt32(dgvOrders.CurrentRow.Cells["ClientId"].Value);
+                cbClientsToEdit.SelectedValue = clientIdToSelect;
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить клиентов");
+            }
+        }
+
+        private void LoadCarsToEdit(int clientId)
+        {
+            try
+            {
+                DataTable carsDataTable = carsRepository.GetCarNamesByClientId(clientId);
+                cbCarsToEdit.DataSource = carsDataTable;
+                cbCarsToEdit.ValueMember = "CarId";
+                cbCarsToEdit.DisplayMember = "CarFullName";
+                var carIdToSelect = Convert.ToInt32(dgvOrders.CurrentRow.Cells["CarId"].Value);
+                cbCarsToEdit.SelectedValue = carIdToSelect;
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить автомобили");
+            }
+        }
+
+        private void cbClientsToEdit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (cbClientsToAdd != null)
+                {
+                    DataRowView drv = (DataRowView)cbClientsToEdit.SelectedItem;
+                    int clientId = Convert.ToInt32(drv["ClientId"]);
+
+                    LoadCarsToEdit(clientId);
+                }
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось загрузить автомобили");
+            }
+        }
+
+        private void bntEditOrder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvOrders.SelectedRows.Count == 1)
+                {
+                    if (cbClientsToEdit.SelectedItem == null)
+                    {
+                        ErrorHandler.ShowWarningMessage("Выберите клиента для редактирования заказа");
+                        return;
+                    }
+
+                    if (cbCarsToEdit.SelectedItem == null)
+                    {
+                        ErrorHandler.ShowWarningMessage("Выберите автомобиль для редактирования заказа");
+                        return;
+                    }
+
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+
+                    DataRowView drvClient = (DataRowView)cbClientsToEdit.SelectedItem;
+                    int clientId = Convert.ToInt32(drvClient["ClientId"]);
+
+                    DataRowView drvCar = (DataRowView)cbCarsToEdit.SelectedItem;
+                    int carId = Convert.ToInt32(drvCar["CarId"]);
+
+                    int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
+
+                    DateTime dateTime = dtpDateToEdit.Value;
+
+                    ordersRepository.UpdateOrder(orderId, ownershipId, dateTime);
+
+                    UpdateOrders();
+                }
+                else if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите один заказ для редактирования");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только один заказ для редактирования");
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
         private void dgvOrderDetails_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvOrderDetails.SelectedRows.Count == 1)
+            try
             {
-                string orderDetailsStatus = dgvOrderDetails.SelectedRows[0].Cells["Status"].Value.ToString();
+                if (dgvOrderDetails.SelectedRows.Count == 1)
+                {
+                    string orderDetailsStatus = dgvOrderDetails.SelectedRows[0].Cells["Status"].Value.ToString();
 
-                if (orderDetailsStatus == "Выполнена")
-                {
-                    btnCompleteService.Enabled = false;
-                    btnEditWorker.Enabled = false;
+                    if (orderDetailsStatus == "Выполнена")
+                    {
+                        btnCompleteService.Enabled = false;
+                        btnEditWorker.Enabled = false;
+                    }
+                    else
+                    {
+                        btnCompleteService.Enabled = true;
+                        btnEditWorker.Enabled = true;
+                    }
                 }
-                else
-                {
-                    btnCompleteService.Enabled = true;
-                    btnEditWorker.Enabled = true;
-                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
         private void клиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClientsForm clientsForm = new ClientsForm(this);
-            clientsForm.ShowDialog();
+            try
+            {
+                ClientsForm clientsForm = new ClientsForm(this);
+                clientsForm.ShowDialog();
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось открыть справочник");
+            }
         }
 
         private void автомобилиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CarsForm carsForm = new CarsForm(this);
-            carsForm.ShowDialog();
+            try
+            {
+                CarsForm carsForm = new CarsForm(this);
+                carsForm.ShowDialog();
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось открыть справочник");
+            }
         }
 
         private void услугиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ServicesForm servicesForm = new ServicesForm(this);
-            servicesForm.ShowDialog();
+            try
+            {
+                ServicesForm servicesForm = new ServicesForm(this);
+                servicesForm.ShowDialog();
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось открыть справочник");
+            }
         }
 
         private void сотрудникиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WorkersForm workersForm = new WorkersForm(this);
-            workersForm.ShowDialog();
+            try
+            {
+                WorkersForm workersForm = new WorkersForm(this);
+                workersForm.ShowDialog();
+            }
+            catch (Exception)
+            {
+                ErrorHandler.ShowWarningMessage("Не удалось открыть справочник");
+            }
         }
 
         private void отчетОМастерахToolStripMenuItem_Click(object sender, EventArgs e)
@@ -575,7 +803,7 @@ namespace CarServiceDBApp
             }
             catch (MySqlException ex)
             {
-                //HandleDatabaseError(ex);
+                HandleDatabaseError(ex);
             }
             catch (Exception ex)
             {
@@ -632,7 +860,7 @@ namespace CarServiceDBApp
             }
             catch (MySqlException ex)
             {
-                //HandleDatabaseError(ex);
+                HandleDatabaseError(ex);
             }
             catch (Exception ex)
             {
@@ -700,7 +928,7 @@ namespace CarServiceDBApp
             }
             catch (MySqlException ex)
             {
-                //HandleDatabaseError(ex);
+                HandleDatabaseError(ex);
             }
             catch (Exception ex)
             {

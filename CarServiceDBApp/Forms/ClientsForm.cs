@@ -124,9 +124,9 @@ namespace CarServiceDBApp.Forms
 
         private bool ValidateClientInput(string surname, string name, string patronymic, DateTime birthDate, string number, string email)
         {
-            if (string.IsNullOrEmpty(surname) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(number) || string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(surname) || string.IsNullOrEmpty(name))
             {
-                ErrorHandler.ShowErrorMessage("Необходимо заполнить все обязательные поля (Фамилия, Имя, Дата рождения, Номер телефона, Email)");
+                ErrorHandler.ShowErrorMessage("Необходимо заполнить все обязательные поля (Фамилия, Имя, Дата рождения)");
                 return false;
             }
 

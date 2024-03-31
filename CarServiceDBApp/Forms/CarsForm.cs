@@ -8,11 +8,10 @@ namespace CarServiceDBApp.Forms
 {
     public partial class CarsForm : Form
     {
-        private MainForm mainForm;
+        MainForm mainForm;
         CarsRepository carsRepository;
         ClientsRepository clientsRepository;
         OrdersRepository ordersRepository;
-        OrderDetailsRepository orderDetailsRepository;
         OwnershipRepository ownershipRepository;
 
         HistoryForm historyForm;
@@ -24,7 +23,6 @@ namespace CarServiceDBApp.Forms
             carsRepository = new CarsRepository();
             clientsRepository = new ClientsRepository();
             ordersRepository = new OrdersRepository();
-            orderDetailsRepository = new OrderDetailsRepository();
             ownershipRepository = new OwnershipRepository();
 
             this.mainForm = mainForm;
