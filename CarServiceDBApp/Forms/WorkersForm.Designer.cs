@@ -33,7 +33,6 @@
             WorkerSurname = new DataGridViewTextBoxColumn();
             WorkerName = new DataGridViewTextBoxColumn();
             WorkerPatronymic = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
             WorkerSalary = new DataGridViewTextBoxColumn();
             WorkerPosition = new DataGridViewTextBoxColumn();
             WorkerPhoneNumber = new DataGridViewTextBoxColumn();
@@ -41,6 +40,8 @@
             gbOrder = new GroupBox();
             tcOrders = new TabControl();
             tpNewWorker = new TabPage();
+            tbIdToAdd = new MaskedTextBox();
+            label6 = new Label();
             tbNumberToAdd = new MaskedTextBox();
             cbPositionToAdd = new ComboBox();
             label4 = new Label();
@@ -53,6 +54,7 @@
             label1 = new Label();
             btnCreateWorker = new Button();
             tpCurrentWorker = new TabPage();
+            btnChangePassword = new Button();
             bntEditWorker = new Button();
             tbNumberToEdit = new MaskedTextBox();
             btnDeleteWorker = new Button();
@@ -66,8 +68,6 @@
             tbNameToEdit = new TextBox();
             label9 = new Label();
             btnUpdate = new Button();
-            label6 = new Label();
-            tbIdToAdd = new MaskedTextBox();
             ((System.ComponentModel.ISupportInitialize)dgvWorkers).BeginInit();
             gbOrder.SuspendLayout();
             tcOrders.SuspendLayout();
@@ -79,15 +79,16 @@
             // 
             dgvWorkers.AllowUserToAddRows = false;
             dgvWorkers.AllowUserToDeleteRows = false;
+            dgvWorkers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvWorkers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvWorkers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvWorkers.Columns.AddRange(new DataGridViewColumn[] { WorkerId, WorkerSurname, WorkerName, WorkerPatronymic, Column3, WorkerSalary, WorkerPosition, WorkerPhoneNumber, PositionId });
+            dgvWorkers.Columns.AddRange(new DataGridViewColumn[] { WorkerId, WorkerSurname, WorkerName, WorkerPatronymic, WorkerSalary, WorkerPosition, WorkerPhoneNumber, PositionId });
             dgvWorkers.Location = new Point(12, 35);
             dgvWorkers.Name = "dgvWorkers";
             dgvWorkers.ReadOnly = true;
             dgvWorkers.RowTemplate.Height = 25;
             dgvWorkers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvWorkers.Size = new Size(1038, 367);
+            dgvWorkers.Size = new Size(1040, 366);
             dgvWorkers.TabIndex = 1;
             dgvWorkers.SelectionChanged += dgvWorkers_SelectionChanged;
             // 
@@ -118,12 +119,6 @@
             WorkerPatronymic.HeaderText = "Отчество";
             WorkerPatronymic.Name = "WorkerPatronymic";
             WorkerPatronymic.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            Column3.HeaderText = "Пароль";
-            Column3.Name = "Column3";
-            Column3.ReadOnly = true;
             // 
             // WorkerSalary
             // 
@@ -156,16 +151,18 @@
             // 
             // gbOrder
             // 
+            gbOrder.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             gbOrder.Controls.Add(tcOrders);
             gbOrder.Location = new Point(12, 421);
             gbOrder.Name = "gbOrder";
             gbOrder.Size = new Size(1038, 353);
-            gbOrder.TabIndex = 12;
+            gbOrder.TabIndex = 2;
             gbOrder.TabStop = false;
             gbOrder.Text = "Работа с сотрудниками";
             // 
             // tcOrders
             // 
+            tcOrders.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tcOrders.Controls.Add(tpNewWorker);
             tcOrders.Controls.Add(tpCurrentWorker);
             tcOrders.Location = new Point(6, 22);
@@ -197,22 +194,44 @@
             tpNewWorker.Text = "Новый сотрудник";
             tpNewWorker.UseVisualStyleBackColor = true;
             // 
+            // tbIdToAdd
+            // 
+            tbIdToAdd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbIdToAdd.Location = new Point(136, 21);
+            tbIdToAdd.Mask = "00000";
+            tbIdToAdd.Name = "tbIdToAdd";
+            tbIdToAdd.Size = new Size(264, 23);
+            tbIdToAdd.TabIndex = 3;
+            tbIdToAdd.ValidatingType = typeof(int);
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(20, 24);
+            label6.Name = "label6";
+            label6.Size = new Size(110, 15);
+            label6.TabIndex = 24;
+            label6.Text = "Табельный номер:";
+            // 
             // tbNumberToAdd
             // 
+            tbNumberToAdd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbNumberToAdd.CutCopyMaskFormat = MaskFormat.ExcludePromptAndLiterals;
             tbNumberToAdd.Location = new Point(136, 245);
             tbNumberToAdd.Mask = "+7 999 000-00-00";
             tbNumberToAdd.Name = "tbNumberToAdd";
             tbNumberToAdd.Size = new Size(264, 23);
-            tbNumberToAdd.TabIndex = 23;
+            tbNumberToAdd.TabIndex = 8;
             // 
             // cbPositionToAdd
             // 
+            cbPositionToAdd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cbPositionToAdd.DropDownStyle = ComboBoxStyle.DropDownList;
             cbPositionToAdd.FormattingEnabled = true;
             cbPositionToAdd.Location = new Point(136, 199);
             cbPositionToAdd.Name = "cbPositionToAdd";
             cbPositionToAdd.Size = new Size(264, 23);
-            cbPositionToAdd.TabIndex = 20;
+            cbPositionToAdd.TabIndex = 7;
             // 
             // label4
             // 
@@ -234,10 +253,11 @@
             // 
             // tbPatronymicToAdd
             // 
+            tbPatronymicToAdd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbPatronymicToAdd.Location = new Point(136, 147);
             tbPatronymicToAdd.Name = "tbPatronymicToAdd";
             tbPatronymicToAdd.Size = new Size(264, 23);
-            tbPatronymicToAdd.TabIndex = 14;
+            tbPatronymicToAdd.TabIndex = 6;
             // 
             // label3
             // 
@@ -250,10 +270,11 @@
             // 
             // tbNameToAdd
             // 
+            tbNameToAdd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbNameToAdd.Location = new Point(136, 101);
             tbNameToAdd.Name = "tbNameToAdd";
             tbNameToAdd.Size = new Size(264, 23);
-            tbNameToAdd.TabIndex = 12;
+            tbNameToAdd.TabIndex = 5;
             // 
             // label2
             // 
@@ -266,10 +287,11 @@
             // 
             // tbSurnameToAdd
             // 
+            tbSurnameToAdd.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbSurnameToAdd.Location = new Point(136, 62);
             tbSurnameToAdd.Name = "tbSurnameToAdd";
             tbSurnameToAdd.Size = new Size(264, 23);
-            tbSurnameToAdd.TabIndex = 10;
+            tbSurnameToAdd.TabIndex = 4;
             // 
             // label1
             // 
@@ -282,16 +304,18 @@
             // 
             // btnCreateWorker
             // 
+            btnCreateWorker.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnCreateWorker.Location = new Point(432, 21);
             btnCreateWorker.Name = "btnCreateWorker";
             btnCreateWorker.Size = new Size(364, 36);
-            btnCreateWorker.TabIndex = 8;
+            btnCreateWorker.TabIndex = 9;
             btnCreateWorker.Text = "Добавить сотрудника";
             btnCreateWorker.UseVisualStyleBackColor = true;
             btnCreateWorker.Click += btnCreateWorker_Click;
             // 
             // tpCurrentWorker
             // 
+            tpCurrentWorker.Controls.Add(btnChangePassword);
             tpCurrentWorker.Controls.Add(bntEditWorker);
             tpCurrentWorker.Controls.Add(tbNumberToEdit);
             tpCurrentWorker.Controls.Add(btnDeleteWorker);
@@ -307,47 +331,63 @@
             tpCurrentWorker.Location = new Point(4, 24);
             tpCurrentWorker.Name = "tpCurrentWorker";
             tpCurrentWorker.Padding = new Padding(3);
-            tpCurrentWorker.Size = new Size(1018, 252);
+            tpCurrentWorker.Size = new Size(1018, 297);
             tpCurrentWorker.TabIndex = 1;
             tpCurrentWorker.Text = "Выбранный сотрудник";
             tpCurrentWorker.UseVisualStyleBackColor = true;
             // 
+            // btnChangePassword
+            // 
+            btnChangePassword.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnChangePassword.Location = new Point(431, 67);
+            btnChangePassword.Name = "btnChangePassword";
+            btnChangePassword.Size = new Size(364, 35);
+            btnChangePassword.TabIndex = 17;
+            btnChangePassword.Text = "Сменить пароль";
+            btnChangePassword.UseVisualStyleBackColor = true;
+            btnChangePassword.Click += btnChangePassword_Click;
+            // 
             // bntEditWorker
             // 
+            bntEditWorker.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             bntEditWorker.Location = new Point(431, 25);
             bntEditWorker.Name = "bntEditWorker";
             bntEditWorker.Size = new Size(364, 36);
-            bntEditWorker.TabIndex = 17;
+            bntEditWorker.TabIndex = 16;
             bntEditWorker.Text = "Редактировать сотрудника";
             bntEditWorker.UseVisualStyleBackColor = true;
             bntEditWorker.Click += bntEditWorker_Click;
             // 
             // tbNumberToEdit
             // 
+            tbNumberToEdit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbNumberToEdit.CutCopyMaskFormat = MaskFormat.ExcludePromptAndLiterals;
             tbNumberToEdit.Location = new Point(133, 208);
             tbNumberToEdit.Mask = "+7 999 000-00-00";
             tbNumberToEdit.Name = "tbNumberToEdit";
             tbNumberToEdit.Size = new Size(264, 23);
-            tbNumberToEdit.TabIndex = 36;
+            tbNumberToEdit.TabIndex = 15;
             // 
             // btnDeleteWorker
             // 
-            btnDeleteWorker.Location = new Point(431, 88);
+            btnDeleteWorker.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnDeleteWorker.Location = new Point(431, 145);
             btnDeleteWorker.Name = "btnDeleteWorker";
             btnDeleteWorker.Size = new Size(364, 35);
-            btnDeleteWorker.TabIndex = 5;
+            btnDeleteWorker.TabIndex = 18;
             btnDeleteWorker.Text = "Удалить сотрудника";
             btnDeleteWorker.UseVisualStyleBackColor = true;
             btnDeleteWorker.Click += btnDeleteWorker_Click;
             // 
             // cbPositionToEdit
             // 
+            cbPositionToEdit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cbPositionToEdit.DropDownStyle = ComboBoxStyle.DropDownList;
             cbPositionToEdit.FormattingEnabled = true;
             cbPositionToEdit.Location = new Point(133, 162);
             cbPositionToEdit.Name = "cbPositionToEdit";
             cbPositionToEdit.Size = new Size(264, 23);
-            cbPositionToEdit.TabIndex = 35;
+            cbPositionToEdit.TabIndex = 14;
             // 
             // label12
             // 
@@ -369,10 +409,11 @@
             // 
             // tbSurnameToEdit
             // 
+            tbSurnameToEdit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbSurnameToEdit.Location = new Point(133, 25);
             tbSurnameToEdit.Name = "tbSurnameToEdit";
             tbSurnameToEdit.Size = new Size(264, 23);
-            tbSurnameToEdit.TabIndex = 28;
+            tbSurnameToEdit.TabIndex = 11;
             // 
             // label8
             // 
@@ -394,17 +435,19 @@
             // 
             // tbPatronymicToEdit
             // 
+            tbPatronymicToEdit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbPatronymicToEdit.Location = new Point(133, 110);
             tbPatronymicToEdit.Name = "tbPatronymicToEdit";
             tbPatronymicToEdit.Size = new Size(264, 23);
-            tbPatronymicToEdit.TabIndex = 32;
+            tbPatronymicToEdit.TabIndex = 13;
             // 
             // tbNameToEdit
             // 
+            tbNameToEdit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbNameToEdit.Location = new Point(133, 64);
             tbNameToEdit.Name = "tbNameToEdit";
             tbNameToEdit.Size = new Size(264, 23);
-            tbNameToEdit.TabIndex = 30;
+            tbNameToEdit.TabIndex = 12;
             // 
             // label9
             // 
@@ -418,42 +461,26 @@
             // btnUpdate
             // 
             btnUpdate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnUpdate.Location = new Point(975, 6);
+            btnUpdate.Location = new Point(977, 6);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new Size(75, 23);
-            btnUpdate.TabIndex = 26;
+            btnUpdate.TabIndex = 0;
             btnUpdate.Text = "Обновить";
             btnUpdate.UseVisualStyleBackColor = true;
             btnUpdate.Click += btnUpdate_Click;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(20, 24);
-            label6.Name = "label6";
-            label6.Size = new Size(110, 15);
-            label6.TabIndex = 24;
-            label6.Text = "Табельный номер:";
-            // 
-            // tbIdToAdd
-            // 
-            tbIdToAdd.Location = new Point(136, 21);
-            tbIdToAdd.Mask = "00000";
-            tbIdToAdd.Name = "tbIdToAdd";
-            tbIdToAdd.Size = new Size(264, 23);
-            tbIdToAdd.TabIndex = 25;
-            tbIdToAdd.ValidatingType = typeof(int);
             // 
             // WorkersForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1062, 786);
+            ClientSize = new Size(1064, 785);
             Controls.Add(btnUpdate);
             Controls.Add(gbOrder);
             Controls.Add(dgvWorkers);
+            MinimumSize = new Size(1080, 824);
             Name = "WorkersForm";
             Text = "База сотрудников";
+            Load += WorkersForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvWorkers).EndInit();
             gbOrder.ResumeLayout(false);
             tcOrders.ResumeLayout(false);
@@ -500,16 +527,16 @@
         private TextBox tbPatronymicToEdit;
         private TextBox tbNameToEdit;
         private Label label9;
+        private MaskedTextBox tbIdToAdd;
+        private Label label6;
         private DataGridViewTextBoxColumn WorkerId;
         private DataGridViewTextBoxColumn WorkerSurname;
         private DataGridViewTextBoxColumn WorkerName;
         private DataGridViewTextBoxColumn WorkerPatronymic;
-        private DataGridViewTextBoxColumn Column3;
         private DataGridViewTextBoxColumn WorkerSalary;
         private DataGridViewTextBoxColumn WorkerPosition;
         private DataGridViewTextBoxColumn WorkerPhoneNumber;
         private DataGridViewTextBoxColumn PositionId;
-        private MaskedTextBox tbIdToAdd;
-        private Label label6;
+        private Button btnChangePassword;
     }
 }

@@ -127,13 +127,13 @@ namespace CarServiceDBApp.Repositories
             }
         }
 
-        public void CreateWorker(int id, int positionId, string surname, string name, string patronymic, string number)
+        public void CreateWorker(int id, int positionId, string surname, string name, string patronymic, string number, string password)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
-                string query = "INSERT INTO Workers values (@id, @positionId, @surname, @name, @patronymic, @number, '12345')";
+                string query = "INSERT INTO Workers values (@id, @positionId, @surname, @name, @patronymic, @number, @password)";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -143,6 +143,7 @@ namespace CarServiceDBApp.Repositories
                     command.Parameters.AddWithValue("@name", name);
                     command.Parameters.AddWithValue("@patronymic", patronymic);
                     command.Parameters.AddWithValue("@number", number);
+                    command.Parameters.AddWithValue("@password", password);
                     command.ExecuteNonQuery();
                 }
             }
@@ -159,8 +160,7 @@ namespace CarServiceDBApp.Repositories
                                     surname = @surname,
                                     name = @name,
                                     patronymic = @patronymic,
-                                    phone_number = @number,
-                                    password = '12345'
+                                    phone_number = @number
                                 WHERE id = @id;";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -176,5 +176,42 @@ namespace CarServiceDBApp.Repositories
             }
         }
 
+        public void UpdateWorkerPassword(int id, string password)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"UPDATE Workers
+                                SET password = @password
+                                WHERE id = @id;";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@password", password);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int CountDirectors()
+        {
+            int k = 0;
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT COUNT(*) FROM Workers WHERE position_id = 21495";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    k = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+
+            return k;
+        }
     }
 }

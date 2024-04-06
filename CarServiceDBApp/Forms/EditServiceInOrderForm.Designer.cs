@@ -39,20 +39,22 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(451, 258);
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.Location = new Point(433, 282);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(81, 39);
-            btnCancel.TabIndex = 7;
+            btnCancel.TabIndex = 3;
             btnCancel.Text = "Отмена";
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
             // btnEditWorkerInService
             // 
-            btnEditWorkerInService.Location = new Point(345, 258);
+            btnEditWorkerInService.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnEditWorkerInService.Location = new Point(327, 282);
             btnEditWorkerInService.Name = "btnEditWorkerInService";
             btnEditWorkerInService.Size = new Size(100, 39);
-            btnEditWorkerInService.TabIndex = 6;
+            btnEditWorkerInService.TabIndex = 2;
             btnEditWorkerInService.Text = "Выбрать";
             btnEditWorkerInService.UseVisualStyleBackColor = true;
             btnEditWorkerInService.Click += btnEditWorkerInService_Click;
@@ -61,6 +63,7 @@
             // 
             dgvWorkersToOrder.AllowUserToAddRows = false;
             dgvWorkersToOrder.AllowUserToDeleteRows = false;
+            dgvWorkersToOrder.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvWorkersToOrder.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvWorkersToOrder.Columns.AddRange(new DataGridViewColumn[] { WorkerId, WorkerFullName, PhoneNumber });
             dgvWorkersToOrder.Location = new Point(12, 12);
@@ -68,8 +71,8 @@
             dgvWorkersToOrder.ReadOnly = true;
             dgvWorkersToOrder.RowTemplate.Height = 25;
             dgvWorkersToOrder.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvWorkersToOrder.Size = new Size(520, 240);
-            dgvWorkersToOrder.TabIndex = 4;
+            dgvWorkersToOrder.Size = new Size(502, 252);
+            dgvWorkersToOrder.TabIndex = 1;
             // 
             // WorkerId
             // 
@@ -101,10 +104,11 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(545, 307);
+            ClientSize = new Size(527, 331);
             Controls.Add(btnCancel);
             Controls.Add(btnEditWorkerInService);
             Controls.Add(dgvWorkersToOrder);
+            MinimumSize = new Size(491, 321);
             Name = "EditServiceInOrderForm";
             Text = "Изменение исполнителя";
             ((System.ComponentModel.ISupportInitialize)dgvWorkersToOrder).EndInit();

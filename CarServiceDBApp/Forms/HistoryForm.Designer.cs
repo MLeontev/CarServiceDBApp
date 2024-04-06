@@ -67,7 +67,7 @@
             dgvOrders.ReadOnly = true;
             dgvOrders.RowTemplate.Height = 25;
             dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvOrders.Size = new Size(1129, 285);
+            dgvOrders.Size = new Size(993, 283);
             dgvOrders.TabIndex = 1;
             dgvOrders.SelectionChanged += dgvOrders_SelectionChanged;
             // 
@@ -157,9 +157,9 @@
             // 
             gbOrderDetails.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             gbOrderDetails.Controls.Add(dgvOrderDetails);
-            gbOrderDetails.Location = new Point(13, 303);
+            gbOrderDetails.Location = new Point(13, 301);
             gbOrderDetails.Name = "gbOrderDetails";
-            gbOrderDetails.Size = new Size(1129, 218);
+            gbOrderDetails.Size = new Size(993, 218);
             gbOrderDetails.TabIndex = 12;
             gbOrderDetails.TabStop = false;
             gbOrderDetails.Text = "Состав выбранного заказа";
@@ -177,8 +177,8 @@
             dgvOrderDetails.ReadOnly = true;
             dgvOrderDetails.RowTemplate.Height = 25;
             dgvOrderDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvOrderDetails.Size = new Size(1117, 182);
-            dgvOrderDetails.TabIndex = 4;
+            dgvOrderDetails.Size = new Size(981, 182);
+            dgvOrderDetails.TabIndex = 2;
             // 
             // ServiceId
             // 
@@ -236,9 +236,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1154, 530);
+            ClientSize = new Size(1018, 528);
             Controls.Add(gbOrderDetails);
             Controls.Add(dgvOrders);
+            MinimumSize = new Size(912, 478);
             Name = "HistoryForm";
             Text = "История заказов";
             ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();

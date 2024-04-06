@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             dgvCars = new DataGridView();
-            btnCancel = new Button();
-            btnAdd = new Button();
             brand = new DataGridViewTextBoxColumn();
             model = new DataGridViewTextBoxColumn();
             registration_number = new DataGridViewTextBoxColumn();
@@ -38,6 +36,8 @@
             VIN = new DataGridViewTextBoxColumn();
             mileage = new DataGridViewTextBoxColumn();
             id = new DataGridViewTextBoxColumn();
+            btnCancel = new Button();
+            btnAdd = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvCars).BeginInit();
             SuspendLayout();
             // 
@@ -45,6 +45,7 @@
             // 
             dgvCars.AllowUserToAddRows = false;
             dgvCars.AllowUserToDeleteRows = false;
+            dgvCars.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvCars.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCars.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCars.Columns.AddRange(new DataGridViewColumn[] { brand, model, registration_number, year, VIN, mileage, id });
@@ -54,27 +55,8 @@
             dgvCars.RowTemplate.Height = 25;
             dgvCars.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvCars.Size = new Size(776, 297);
-            dgvCars.TabIndex = 5;
-            // 
-            // btnCancel
-            // 
-            btnCancel.Location = new Point(672, 327);
-            btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(116, 39);
-            btnCancel.TabIndex = 9;
-            btnCancel.Text = "Отмена";
-            btnCancel.UseVisualStyleBackColor = true;
-            btnCancel.Click += btnCancel_Click;
-            // 
-            // btnAdd
-            // 
-            btnAdd.Location = new Point(550, 327);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(116, 39);
-            btnAdd.TabIndex = 8;
-            btnAdd.Text = "Выбрать";
-            btnAdd.UseVisualStyleBackColor = true;
-            btnAdd.Click += btnAdd_Click;
+            dgvCars.TabIndex = 1;
+            dgvCars.TabStop = false;
             // 
             // brand
             // 
@@ -126,18 +108,41 @@
             id.ReadOnly = true;
             id.Visible = false;
             // 
+            // btnCancel
+            // 
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.Location = new Point(672, 327);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(116, 39);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "Отмена";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnAdd.Location = new Point(550, 327);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(116, 39);
+            btnAdd.TabIndex = 2;
+            btnAdd.Text = "Выбрать";
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
+            // 
             // AddCarToClientForm
             // 
             AcceptButton = btnAdd;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(800, 378);
+            ClientSize = new Size(803, 382);
             Controls.Add(btnCancel);
             Controls.Add(btnAdd);
             Controls.Add(dgvCars);
+            MinimumSize = new Size(819, 421);
             Name = "AddCarToClientForm";
-            Text = "AddCarToClientForm";
+            Text = "Выбор автомобиля";
             ((System.ComponentModel.ISupportInitialize)dgvCars).EndInit();
             ResumeLayout(false);
         }

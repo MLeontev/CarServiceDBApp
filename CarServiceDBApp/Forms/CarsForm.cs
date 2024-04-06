@@ -1,4 +1,5 @@
-﻿using CarServiceDBApp.Helpers;
+﻿using CarServiceDBApp.Authorization;
+using CarServiceDBApp.Helpers;
 using CarServiceDBApp.Repositories;
 using MySql.Data.MySqlClient;
 using System.Globalization;
@@ -26,8 +27,23 @@ namespace CarServiceDBApp.Forms
             ownershipRepository = new OwnershipRepository();
 
             this.mainForm = mainForm;
+        }
 
+        private void CarsForm_Load(object sender, EventArgs e)
+        {
+            RoleInterface(User.PositionId);
             UpdateCars();
+        }
+
+        private void RoleInterface(int positionId)
+        {
+            switch (positionId)
+            {
+                case 21495:
+                    gbClients.Enabled = false;
+                    gbCar.Enabled = false;
+                    break;
+            }
         }
 
         private void UpdateCars()

@@ -1,4 +1,5 @@
-﻿using CarServiceDBApp.Helpers;
+﻿using CarServiceDBApp.Authorization;
+using CarServiceDBApp.Helpers;
 using CarServiceDBApp.Repositories;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -16,9 +17,13 @@ namespace CarServiceDBApp.Forms
             InitializeComponent();
             workersRepository = new WorkersRepository();
             positionsRepository = new PositionsRepository();
+            this.mainForm = mainForm;
+        }
+
+        private void WorkersForm_Load(object sender, EventArgs e)
+        {
             UpdateWorkers();
             LoadPositionsToAdd();
-            this.mainForm = mainForm;
         }
 
         private void UpdateWorkers()
@@ -59,6 +64,16 @@ namespace CarServiceDBApp.Forms
             {
                 if (dgvWorkers.SelectedRows.Count == 1)
                 {
+                    if (Convert.ToInt32(dgvWorkers.CurrentRow.Cells["PositionId"].Value) == 21495)
+                    {
+                        int k = workersRepository.CountDirectors();
+                        if (k == 1)
+                        {
+                            ErrorHandler.ShowErrorMessage("Нельзя удалить единственного директора");
+                            return;
+                        }
+                    }
+
                     int workerId = Convert.ToInt32(dgvWorkers.CurrentRow.Cells["WorkerId"].Value);
                     workersRepository.DeleteWorker(workerId);
                     dgvWorkers.Rows.RemoveAt(dgvWorkers.SelectedRows[0].Index);
@@ -173,6 +188,7 @@ namespace CarServiceDBApp.Forms
                 string name = tbNameToAdd.Text.Trim();
                 string patronymic = tbPatronymicToAdd.Text.Trim();
                 string number = new string(tbNumberToAdd.Text.Where(c => char.IsDigit(c) || c == '+').ToArray());
+                string password = PasswordGenerator.GenerateRandomPassword();
 
                 if (cbPositionToAdd.SelectedItem != null)
                 {
@@ -182,9 +198,10 @@ namespace CarServiceDBApp.Forms
                     if (ValidateWorkerInput(id, surname, name, patronymic, number))
                     {
                         int workerId = Convert.ToInt32(id);
-                        workersRepository.CreateWorker(workerId, positionId, surname, name, patronymic, number);
+                        workersRepository.CreateWorker(workerId, positionId, surname, name, patronymic, number, PasswordGenerator.HashPassword(password));
                         UpdateWorkers();
                         mainForm.UpadateAll();
+                        MessageBox.Show($"Для сотрудника создан пароль: {password}");
 
                         tbSurnameToAdd.Clear();
                         tbNameToAdd.Clear();
@@ -229,6 +246,11 @@ namespace CarServiceDBApp.Forms
                         DataRowView drvWorker = (DataRowView)cbPositionToEdit.SelectedItem;
                         int positionId = Convert.ToInt32(drvWorker["PositionId"]);
 
+                        if (workersRepository.CountDirectors() == 1 && (int)dgvWorkers.CurrentRow.Cells["PositionId"].Value == 21495)
+                        {
+                            ErrorHandler.ShowErrorMessage("Нельзя изменить должность единственного директора");
+                        }
+
                         if (ValidateWorkerInput(id, surname, name, patronymic, number))
                         {
                             int workerId = Convert.ToInt32(id);
@@ -272,6 +294,36 @@ namespace CarServiceDBApp.Forms
                     tbPatronymicToEdit.Text = dgvWorkers.CurrentRow.Cells["WorkerPatronymic"].Value.ToString();
                     tbNumberToEdit.Text = dgvWorkers.CurrentRow.Cells["WorkerPhoneNumber"].Value.ToString();
                     LoadPositionsToEdit();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
+            }
+        }
+
+        private void btnChangePassword_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvWorkers.SelectedRows.Count == 1)
+                {
+                    int id = (int)dgvWorkers.CurrentRow.Cells["WorkerId"].Value;
+                    string password = PasswordGenerator.GenerateRandomPassword();
+                    MessageBox.Show($"Для сотрудника создан пароль: {password}");
+                    workersRepository.UpdateWorkerPassword(id, PasswordGenerator.HashPassword(password));
+                }
+                else if (dgvWorkers.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите сотрудника");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только одного сотрудника");
                 }
             }
             catch (MySqlException ex)

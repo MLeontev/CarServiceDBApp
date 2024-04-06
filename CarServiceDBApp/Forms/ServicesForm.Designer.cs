@@ -76,7 +76,7 @@
             dgvServices.RowTemplate.Height = 25;
             dgvServices.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvServices.Size = new Size(467, 253);
-            dgvServices.TabIndex = 0;
+            dgvServices.TabIndex = 1;
             dgvServices.SelectionChanged += dgvServices_SelectionChanged;
             // 
             // ServiceName
@@ -129,7 +129,7 @@
             gbService.Location = new Point(12, 283);
             gbService.Name = "gbService";
             gbService.Size = new Size(851, 276);
-            gbService.TabIndex = 11;
+            gbService.TabIndex = 2;
             gbService.TabStop = false;
             gbService.Text = "Работа с услугами";
             // 
@@ -169,7 +169,7 @@
             tbDescriptionToAdd.Multiline = true;
             tbDescriptionToAdd.Name = "tbDescriptionToAdd";
             tbDescriptionToAdd.Size = new Size(361, 141);
-            tbDescriptionToAdd.TabIndex = 18;
+            tbDescriptionToAdd.TabIndex = 5;
             // 
             // label4
             // 
@@ -187,7 +187,7 @@
             tbPriceToAdd.Location = new Point(82, 86);
             tbPriceToAdd.Name = "tbPriceToAdd";
             tbPriceToAdd.Size = new Size(340, 23);
-            tbPriceToAdd.TabIndex = 16;
+            tbPriceToAdd.TabIndex = 4;
             // 
             // btnCreateService
             // 
@@ -195,7 +195,7 @@
             btnCreateService.Location = new Point(8, 139);
             btnCreateService.Name = "btnCreateService";
             btnCreateService.Size = new Size(414, 36);
-            btnCreateService.TabIndex = 8;
+            btnCreateService.TabIndex = 6;
             btnCreateService.Text = "Создать услугу";
             btnCreateService.UseVisualStyleBackColor = true;
             btnCreateService.Click += btnCreateService_Click;
@@ -224,7 +224,7 @@
             tbNameToAdd.Location = new Point(82, 47);
             tbNameToAdd.Name = "tbNameToAdd";
             tbNameToAdd.Size = new Size(340, 23);
-            tbNameToAdd.TabIndex = 14;
+            tbNameToAdd.TabIndex = 3;
             // 
             // tpCurrentService
             // 
@@ -250,7 +250,7 @@
             btnDeleteService.Location = new Point(16, 175);
             btnDeleteService.Name = "btnDeleteService";
             btnDeleteService.Size = new Size(414, 36);
-            btnDeleteService.TabIndex = 26;
+            btnDeleteService.TabIndex = 11;
             btnDeleteService.Text = "Удалить услугу";
             btnDeleteService.UseVisualStyleBackColor = true;
             btnDeleteService.Click += btnDeleteService_Click;
@@ -263,7 +263,7 @@
             tbDescriptionToEdit.Multiline = true;
             tbDescriptionToEdit.Name = "tbDescriptionToEdit";
             tbDescriptionToEdit.Size = new Size(361, 141);
-            tbDescriptionToEdit.TabIndex = 25;
+            tbDescriptionToEdit.TabIndex = 9;
             // 
             // btnDeleteOrder
             // 
@@ -297,21 +297,21 @@
             tbPriceToEdit.Location = new Point(90, 80);
             tbPriceToEdit.Name = "tbPriceToEdit";
             tbPriceToEdit.Size = new Size(340, 23);
-            tbPriceToEdit.TabIndex = 23;
+            tbPriceToEdit.TabIndex = 8;
             // 
             // tbNameToEdit
             // 
             tbNameToEdit.Location = new Point(90, 41);
             tbNameToEdit.Name = "tbNameToEdit";
             tbNameToEdit.Size = new Size(340, 23);
-            tbNameToEdit.TabIndex = 21;
+            tbNameToEdit.TabIndex = 7;
             // 
             // btnEditService
             // 
             btnEditService.Location = new Point(16, 124);
             btnEditService.Name = "btnEditService";
             btnEditService.Size = new Size(414, 36);
-            btnEditService.TabIndex = 19;
+            btnEditService.TabIndex = 10;
             btnEditService.Text = "Редактировать услугу";
             btnEditService.UseVisualStyleBackColor = true;
             btnEditService.Click += btnEditService_Click;
@@ -331,7 +331,7 @@
             btnUpdate.Location = new Point(788, 8);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new Size(75, 23);
-            btnUpdate.TabIndex = 12;
+            btnUpdate.TabIndex = 0;
             btnUpdate.Text = "Обновить";
             btnUpdate.UseVisualStyleBackColor = true;
             btnUpdate.Click += btnUpdate_Click;
@@ -349,6 +349,7 @@
             MinimumSize = new Size(891, 611);
             Name = "ServicesForm";
             Text = "Справочник услуг";
+            Load += ServicesForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvServices).EndInit();
             gbService.ResumeLayout(false);
             tcServices.ResumeLayout(false);

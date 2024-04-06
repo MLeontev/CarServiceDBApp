@@ -42,7 +42,7 @@
             btnCancel.Location = new Point(226, 98);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(93, 39);
-            btnCancel.TabIndex = 5;
+            btnCancel.TabIndex = 4;
             btnCancel.Text = "Отмена";
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
@@ -53,7 +53,7 @@
             btnAccept.Location = new Point(119, 98);
             btnAccept.Name = "btnAccept";
             btnAccept.Size = new Size(93, 39);
-            btnAccept.TabIndex = 4;
+            btnAccept.TabIndex = 3;
             btnAccept.Text = "Выбрать";
             btnAccept.UseVisualStyleBackColor = true;
             btnAccept.Click += btnAccept_Click;
@@ -64,7 +64,7 @@
             dtpEndDate.Location = new Point(119, 51);
             dtpEndDate.Name = "dtpEndDate";
             dtpEndDate.Size = new Size(200, 23);
-            dtpEndDate.TabIndex = 3;
+            dtpEndDate.TabIndex = 2;
             // 
             // dtpStartDate
             // 
@@ -72,7 +72,7 @@
             dtpStartDate.Location = new Point(119, 9);
             dtpStartDate.Name = "dtpStartDate";
             dtpStartDate.Size = new Size(200, 23);
-            dtpStartDate.TabIndex = 6;
+            dtpStartDate.TabIndex = 1;
             // 
             // label1
             // 
@@ -107,7 +107,7 @@
             Controls.Add(dtpEndDate);
             MinimumSize = new Size(358, 194);
             Name = "ReportDateForm";
-            Text = "ReportDateForm";
+            Text = "Отчетный период";
             ResumeLayout(false);
             PerformLayout();
         }

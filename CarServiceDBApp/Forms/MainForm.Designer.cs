@@ -88,13 +88,14 @@
             cbClientsToEdit = new ComboBox();
             label9 = new Label();
             gbOrderDetails = new GroupBox();
-            groupBox1 = new GroupBox();
+            gbStatus = new GroupBox();
             btnStatusОтменен = new Button();
             btnStatusВыполнен = new Button();
             btnStatusВРаботе = new Button();
             btnStatusЗаявка = new Button();
             btnAllOrders = new Button();
             btnActiveOrders = new Button();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvOrderDetails).BeginInit();
@@ -103,13 +104,14 @@
             tpNewOrder.SuspendLayout();
             tpCurrentOrder.SuspendLayout();
             gbOrderDetails.SuspendLayout();
-            groupBox1.SuspendLayout();
+            gbStatus.SuspendLayout();
             SuspendLayout();
             // 
             // dgvOrders
             // 
             dgvOrders.AllowUserToAddRows = false;
             dgvOrders.AllowUserToDeleteRows = false;
+            dgvOrders.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvOrders.Columns.AddRange(new DataGridViewColumn[] { OrderId, OwnershipId, ClientId, CarId, ClientFullName, CarFullName, AppointmentDate, CompletionDate, Sum, StatusId, StatusName });
@@ -119,7 +121,7 @@
             dgvOrders.RowTemplate.Height = 25;
             dgvOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvOrders.Size = new Size(1129, 395);
-            dgvOrders.TabIndex = 0;
+            dgvOrders.TabIndex = 3;
             dgvOrders.SelectionChanged += dgvOrders_SelectionChanged;
             // 
             // OrderId
@@ -299,10 +301,11 @@
             // 
             // btnUpdateOrders
             // 
+            btnUpdateOrders.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnUpdateOrders.Location = new Point(1065, 38);
             btnUpdateOrders.Name = "btnUpdateOrders";
             btnUpdateOrders.Size = new Size(75, 23);
-            btnUpdateOrders.TabIndex = 3;
+            btnUpdateOrders.TabIndex = 0;
             btnUpdateOrders.Text = "Обновить";
             btnUpdateOrders.UseVisualStyleBackColor = true;
             btnUpdateOrders.Click += btnUpdateOrders_Click;
@@ -311,6 +314,7 @@
             // 
             dgvOrderDetails.AllowUserToAddRows = false;
             dgvOrderDetails.AllowUserToDeleteRows = false;
+            dgvOrderDetails.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvOrderDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvOrderDetails.Columns.AddRange(new DataGridViewColumn[] { ServiceId, OrderDetailsId, ServiceName, WorkerId, WorkerFullName, Price, Status });
             dgvOrderDetails.Location = new Point(6, 20);
@@ -319,7 +323,7 @@
             dgvOrderDetails.RowTemplate.Height = 25;
             dgvOrderDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvOrderDetails.Size = new Size(696, 182);
-            dgvOrderDetails.TabIndex = 4;
+            dgvOrderDetails.TabIndex = 9;
             dgvOrderDetails.SelectionChanged += dgvOrderDetails_SelectionChanged;
             // 
             // ServiceId
@@ -382,58 +386,63 @@
             btnDeleteOrder.Location = new Point(6, 229);
             btnDeleteOrder.Name = "btnDeleteOrder";
             btnDeleteOrder.Size = new Size(383, 35);
-            btnDeleteOrder.TabIndex = 5;
+            btnDeleteOrder.TabIndex = 24;
             btnDeleteOrder.Text = "Удалить заказ";
             btnDeleteOrder.UseVisualStyleBackColor = true;
             btnDeleteOrder.Click += btnDeleteOrder_Click;
             // 
             // btnDeleteServiceFromOrder
             // 
+            btnDeleteServiceFromOrder.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnDeleteServiceFromOrder.Location = new Point(531, 208);
             btnDeleteServiceFromOrder.Name = "btnDeleteServiceFromOrder";
             btnDeleteServiceFromOrder.Size = new Size(171, 28);
-            btnDeleteServiceFromOrder.TabIndex = 6;
+            btnDeleteServiceFromOrder.TabIndex = 13;
             btnDeleteServiceFromOrder.Text = "Удалить услугу из заказа";
             btnDeleteServiceFromOrder.UseVisualStyleBackColor = true;
             btnDeleteServiceFromOrder.Click += btnDeleteServiceFromOrder_Click;
             // 
             // btnCompleteService
             // 
+            btnCompleteService.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnCompleteService.Location = new Point(181, 208);
             btnCompleteService.Name = "btnCompleteService";
             btnCompleteService.Size = new Size(169, 28);
-            btnCompleteService.TabIndex = 7;
+            btnCompleteService.TabIndex = 11;
             btnCompleteService.Text = "Выполнить услугу";
             btnCompleteService.UseVisualStyleBackColor = true;
             btnCompleteService.Click += btnCompleteService_Click;
             // 
             // btnOpenAddServiceForm
             // 
+            btnOpenAddServiceForm.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnOpenAddServiceForm.Location = new Point(6, 208);
             btnOpenAddServiceForm.Name = "btnOpenAddServiceForm";
             btnOpenAddServiceForm.Size = new Size(169, 28);
-            btnOpenAddServiceForm.TabIndex = 8;
+            btnOpenAddServiceForm.TabIndex = 10;
             btnOpenAddServiceForm.Text = "Добавить услугу";
             btnOpenAddServiceForm.UseVisualStyleBackColor = true;
             btnOpenAddServiceForm.Click += btnOpenAddServiceForm_Click;
             // 
             // btnEditWorker
             // 
+            btnEditWorker.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnEditWorker.Location = new Point(356, 208);
             btnEditWorker.Name = "btnEditWorker";
             btnEditWorker.Size = new Size(169, 28);
-            btnEditWorker.TabIndex = 9;
+            btnEditWorker.TabIndex = 12;
             btnEditWorker.Text = "Заменить исполнителя";
             btnEditWorker.UseVisualStyleBackColor = true;
             btnEditWorker.Click += btnEditWorker_Click;
             // 
             // gbOrder
             // 
+            gbOrder.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             gbOrder.Controls.Add(tcOrders);
             gbOrder.Location = new Point(12, 470);
             gbOrder.Name = "gbOrder";
             gbOrder.Size = new Size(415, 331);
-            gbOrder.TabIndex = 10;
+            gbOrder.TabIndex = 14;
             gbOrder.TabStop = false;
             gbOrder.Text = "Работа с заказами";
             // 
@@ -471,7 +480,7 @@
             btnCreateOrder.Location = new Point(6, 228);
             btnCreateOrder.Name = "btnCreateOrder";
             btnCreateOrder.Size = new Size(383, 36);
-            btnCreateOrder.TabIndex = 8;
+            btnCreateOrder.TabIndex = 19;
             btnCreateOrder.Text = "Создать заказ";
             btnCreateOrder.UseVisualStyleBackColor = true;
             btnCreateOrder.Click += btnCreateOrder_Click;
@@ -480,8 +489,8 @@
             // 
             dptDateToAdd.Location = new Point(6, 187);
             dptDateToAdd.Name = "dptDateToAdd";
-            dptDateToAdd.Size = new Size(200, 23);
-            dptDateToAdd.TabIndex = 7;
+            dptDateToAdd.Size = new Size(383, 23);
+            dptDateToAdd.TabIndex = 18;
             // 
             // label5
             // 
@@ -499,7 +508,7 @@
             cbWorkersToAdd.Location = new Point(6, 132);
             cbWorkersToAdd.Name = "cbWorkersToAdd";
             cbWorkersToAdd.Size = new Size(383, 23);
-            cbWorkersToAdd.TabIndex = 5;
+            cbWorkersToAdd.TabIndex = 17;
             // 
             // label4
             // 
@@ -517,7 +526,7 @@
             cbCarsToAdd.Location = new Point(6, 76);
             cbCarsToAdd.Name = "cbCarsToAdd";
             cbCarsToAdd.Size = new Size(383, 23);
-            cbCarsToAdd.TabIndex = 3;
+            cbCarsToAdd.TabIndex = 16;
             // 
             // label3
             // 
@@ -535,7 +544,7 @@
             cbClientsToAdd.Location = new Point(6, 21);
             cbClientsToAdd.Name = "cbClientsToAdd";
             cbClientsToAdd.Size = new Size(383, 23);
-            cbClientsToAdd.TabIndex = 1;
+            cbClientsToAdd.TabIndex = 15;
             cbClientsToAdd.SelectedIndexChanged += cbClientsToAdd_SelectedIndexChanged;
             // 
             // label2
@@ -570,7 +579,7 @@
             bntEditOrder.Location = new Point(6, 171);
             bntEditOrder.Name = "bntEditOrder";
             bntEditOrder.Size = new Size(383, 36);
-            bntEditOrder.TabIndex = 17;
+            bntEditOrder.TabIndex = 23;
             bntEditOrder.Text = "Редактировать заказ";
             bntEditOrder.UseVisualStyleBackColor = true;
             bntEditOrder.Click += bntEditOrder_Click;
@@ -579,8 +588,8 @@
             // 
             dtpDateToEdit.Location = new Point(6, 135);
             dtpDateToEdit.Name = "dtpDateToEdit";
-            dtpDateToEdit.Size = new Size(200, 23);
-            dtpDateToEdit.TabIndex = 16;
+            dtpDateToEdit.Size = new Size(383, 23);
+            dtpDateToEdit.TabIndex = 22;
             // 
             // label6
             // 
@@ -598,7 +607,7 @@
             cbCarsToEdit.Location = new Point(6, 78);
             cbCarsToEdit.Name = "cbCarsToEdit";
             cbCarsToEdit.Size = new Size(383, 23);
-            cbCarsToEdit.TabIndex = 12;
+            cbCarsToEdit.TabIndex = 21;
             // 
             // label8
             // 
@@ -616,7 +625,7 @@
             cbClientsToEdit.Location = new Point(6, 23);
             cbClientsToEdit.Name = "cbClientsToEdit";
             cbClientsToEdit.Size = new Size(383, 23);
-            cbClientsToEdit.TabIndex = 10;
+            cbClientsToEdit.TabIndex = 20;
             cbClientsToEdit.SelectedIndexChanged += cbClientsToEdit_SelectedIndexChanged;
             // 
             // label9
@@ -630,6 +639,7 @@
             // 
             // gbOrderDetails
             // 
+            gbOrderDetails.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             gbOrderDetails.Controls.Add(dgvOrderDetails);
             gbOrderDetails.Controls.Add(btnDeleteServiceFromOrder);
             gbOrderDetails.Controls.Add(btnEditWorker);
@@ -642,25 +652,26 @@
             gbOrderDetails.TabStop = false;
             gbOrderDetails.Text = "Состав выбранного заказа";
             // 
-            // groupBox1
+            // gbStatus
             // 
-            groupBox1.Controls.Add(btnStatusОтменен);
-            groupBox1.Controls.Add(btnStatusВыполнен);
-            groupBox1.Controls.Add(btnStatusВРаботе);
-            groupBox1.Controls.Add(btnStatusЗаявка);
-            groupBox1.Location = new Point(433, 470);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(707, 74);
-            groupBox1.TabIndex = 12;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Статус выбранного заказа";
+            gbStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            gbStatus.Controls.Add(btnStatusОтменен);
+            gbStatus.Controls.Add(btnStatusВыполнен);
+            gbStatus.Controls.Add(btnStatusВРаботе);
+            gbStatus.Controls.Add(btnStatusЗаявка);
+            gbStatus.Location = new Point(433, 470);
+            gbStatus.Name = "gbStatus";
+            gbStatus.Size = new Size(571, 74);
+            gbStatus.TabIndex = 12;
+            gbStatus.TabStop = false;
+            gbStatus.Text = "Статус выбранного заказа";
             // 
             // btnStatusОтменен
             // 
             btnStatusОтменен.Location = new Point(429, 22);
             btnStatusОтменен.Name = "btnStatusОтменен";
             btnStatusОтменен.Size = new Size(135, 41);
-            btnStatusОтменен.TabIndex = 3;
+            btnStatusОтменен.TabIndex = 7;
             btnStatusОтменен.Text = "Отменен";
             btnStatusОтменен.UseVisualStyleBackColor = true;
             btnStatusОтменен.Click += btnStatusОтменен_Click;
@@ -670,7 +681,7 @@
             btnStatusВыполнен.Location = new Point(288, 22);
             btnStatusВыполнен.Name = "btnStatusВыполнен";
             btnStatusВыполнен.Size = new Size(135, 41);
-            btnStatusВыполнен.TabIndex = 2;
+            btnStatusВыполнен.TabIndex = 6;
             btnStatusВыполнен.Text = "Выполнен-закрыт";
             btnStatusВыполнен.UseVisualStyleBackColor = true;
             btnStatusВыполнен.Click += btnStatusВыполнен_Click;
@@ -680,7 +691,7 @@
             btnStatusВРаботе.Location = new Point(147, 22);
             btnStatusВРаботе.Name = "btnStatusВРаботе";
             btnStatusВРаботе.Size = new Size(135, 41);
-            btnStatusВРаботе.TabIndex = 1;
+            btnStatusВРаботе.TabIndex = 5;
             btnStatusВРаботе.Text = "В работе";
             btnStatusВРаботе.UseVisualStyleBackColor = true;
             btnStatusВРаботе.Click += btnStatusВРаботе_Click;
@@ -690,7 +701,7 @@
             btnStatusЗаявка.Location = new Point(6, 22);
             btnStatusЗаявка.Name = "btnStatusЗаявка";
             btnStatusЗаявка.Size = new Size(135, 41);
-            btnStatusЗаявка.TabIndex = 0;
+            btnStatusЗаявка.TabIndex = 4;
             btnStatusЗаявка.Text = "Заявка";
             btnStatusЗаявка.UseVisualStyleBackColor = true;
             btnStatusЗаявка.Click += btnStatusЗаявка_Click;
@@ -700,7 +711,7 @@
             btnAllOrders.Location = new Point(75, 36);
             btnAllOrders.Name = "btnAllOrders";
             btnAllOrders.Size = new Size(92, 23);
-            btnAllOrders.TabIndex = 13;
+            btnAllOrders.TabIndex = 1;
             btnAllOrders.Text = "Все заказы";
             btnAllOrders.UseVisualStyleBackColor = true;
             btnAllOrders.Click += btnAllOrders_Click;
@@ -710,10 +721,21 @@
             btnActiveOrders.Location = new Point(173, 36);
             btnActiveOrders.Name = "btnActiveOrders";
             btnActiveOrders.Size = new Size(172, 23);
-            btnActiveOrders.TabIndex = 14;
+            btnActiveOrders.TabIndex = 2;
             btnActiveOrders.Text = "Только активные заказы";
             btnActiveOrders.UseVisualStyleBackColor = true;
             btnActiveOrders.Click += btnActiveOrders_Click;
+            // 
+            // button1
+            // 
+            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button1.Location = new Point(1010, 470);
+            button1.Name = "button1";
+            button1.Size = new Size(131, 74);
+            button1.TabIndex = 8;
+            button1.Text = "Составить заказ-наряд";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // MainForm
             // 
@@ -721,17 +743,21 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Menu;
             ClientSize = new Size(1152, 817);
+            Controls.Add(button1);
             Controls.Add(btnActiveOrders);
             Controls.Add(btnAllOrders);
-            Controls.Add(groupBox1);
+            Controls.Add(gbStatus);
             Controls.Add(gbOrderDetails);
             Controls.Add(gbOrder);
             Controls.Add(btnUpdateOrders);
             Controls.Add(label1);
             Controls.Add(toolStrip1);
             Controls.Add(dgvOrders);
+            MinimumSize = new Size(1168, 856);
             Name = "MainForm";
             Text = "Заказы";
+            FormClosed += MainForm_FormClosed;
+            Load += MainForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
@@ -743,7 +769,7 @@
             tpCurrentOrder.ResumeLayout(false);
             tpCurrentOrder.PerformLayout();
             gbOrderDetails.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
+            gbStatus.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -791,7 +817,7 @@
         private DataGridViewTextBoxColumn WorkerFullName;
         private DataGridViewTextBoxColumn Price;
         private DataGridViewTextBoxColumn Status;
-        private GroupBox groupBox1;
+        private GroupBox gbStatus;
         private Button btnStatusОтменен;
         private Button btnStatusВыполнен;
         private Button btnStatusВРаботе;
@@ -816,5 +842,6 @@
         private ToolStripMenuItem отчетОМастерахToolStripMenuItem;
         private ToolStripMenuItem отчетОВыполненныхУслугахToolStripMenuItem;
         private ToolStripMenuItem отчетОЗаказахToolStripMenuItem;
+        private Button button1;
     }
 }

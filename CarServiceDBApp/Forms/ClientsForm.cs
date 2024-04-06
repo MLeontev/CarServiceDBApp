@@ -1,6 +1,7 @@
 ﻿using CarServiceDBApp.Repositories;
 using CarServiceDBApp.Helpers;
 using MySql.Data.MySqlClient;
+using CarServiceDBApp.Authorization;
 
 namespace CarServiceDBApp.Forms
 {
@@ -22,8 +23,23 @@ namespace CarServiceDBApp.Forms
             ordersRepository = new OrdersRepository();
             ownershipRepository = new OwnershipRepository();
             this.mainForm = mainForm;
+        }
 
+        private void ClientsForm_Load(object sender, EventArgs e)
+        {
+            RoleInterface(User.PositionId);
             UpdateClients();
+        }
+
+        private void RoleInterface(int positionId)
+        {
+            switch (positionId)
+            {
+                case 21495:
+                    gbClient.Enabled = false;
+                    gbCars.Enabled = false;
+                    break;
+            }
         }
 
         private void HandleDatabaseError(MySqlException ex)
@@ -126,7 +142,7 @@ namespace CarServiceDBApp.Forms
         {
             if (string.IsNullOrEmpty(surname) || string.IsNullOrEmpty(name))
             {
-                ErrorHandler.ShowErrorMessage("Необходимо заполнить все обязательные поля (Фамилия, Имя, Дата рождения)");
+                ErrorHandler.ShowErrorMessage("Необходимо заполнить все обязательные поля (Фамилия, Имя, Дата рождения, номер телефона)");
                 return false;
             }
 
@@ -163,7 +179,7 @@ namespace CarServiceDBApp.Forms
                 return false;
             }
 
-            if (!email.Contains('@'))
+            if (!string.IsNullOrEmpty(email) && !email.Contains('@'))
             {
                 ErrorHandler.ShowErrorMessage("Некорректный адрес электронной почты");
                 return false;

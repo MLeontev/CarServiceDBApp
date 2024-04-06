@@ -166,5 +166,52 @@ namespace CarServiceDBApp.Repositories
 
             return dataTable;
         }
+
+        public DataTable GetDetailsData(int orderId)
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"
+                                SELECT
+                                    Services.name AS ServiceName,
+                                    Services.price AS Price,
+                                    CONCAT(Workers.surname, ' ', Workers.name, ' ',  IFNULL(Workers.patronymic, '')) AS WorkerFullName
+                                FROM 
+                                    Order_details
+                                INNER JOIN 
+                                    Services ON Order_details.service_id = Services.id
+                                INNER JOIN 
+                                    Workers ON Order_details.employee_id = Workers.id
+                                WHERE 
+                                    Order_details.order_id = @orderId;
+                            ";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@orderId", orderId);
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Ошибка при работе с базой данных: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла неопознанная ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dataTable;
+        }
     }
 }

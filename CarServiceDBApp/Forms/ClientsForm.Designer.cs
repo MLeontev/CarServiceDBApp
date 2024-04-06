@@ -34,7 +34,7 @@
             ClientPhoneNumber = new DataGridViewTextBoxColumn();
             ClientEmail = new DataGridViewTextBoxColumn();
             ClientId = new DataGridViewTextBoxColumn();
-            gbOrder = new GroupBox();
+            gbClient = new GroupBox();
             tcOrders = new TabControl();
             tpNewOrder = new TabPage();
             tbNumberToAdd = new MaskedTextBox();
@@ -65,7 +65,7 @@
             label12 = new Label();
             bntEditClient = new Button();
             btnDeleteClient = new Button();
-            gbOrderDetails = new GroupBox();
+            gbCars = new GroupBox();
             dgvCars = new DataGridView();
             CarBrand = new DataGridViewTextBoxColumn();
             CarModel = new DataGridViewTextBoxColumn();
@@ -80,11 +80,11 @@
             btnHistory = new Button();
             btnUpdate = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClients).BeginInit();
-            gbOrder.SuspendLayout();
+            gbClient.SuspendLayout();
             tcOrders.SuspendLayout();
             tpNewOrder.SuspendLayout();
             tpCurrentOrder.SuspendLayout();
-            gbOrderDetails.SuspendLayout();
+            gbCars.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCars).BeginInit();
             SuspendLayout();
             // 
@@ -92,6 +92,7 @@
             // 
             dgvClients.AllowUserToAddRows = false;
             dgvClients.AllowUserToDeleteRows = false;
+            dgvClients.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvClients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvClients.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvClients.Columns.AddRange(new DataGridViewColumn[] { ClientFullName, ClientBirthDate, ClientPhoneNumber, ClientEmail, ClientId });
@@ -101,7 +102,7 @@
             dgvClients.RowTemplate.Height = 25;
             dgvClients.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvClients.Size = new Size(1038, 367);
-            dgvClients.TabIndex = 0;
+            dgvClients.TabIndex = 1;
             dgvClients.SelectionChanged += dgvClients_SelectionChanged;
             // 
             // ClientFullName
@@ -140,15 +141,16 @@
             ClientId.ReadOnly = true;
             ClientId.Visible = false;
             // 
-            // gbOrder
+            // gbClient
             // 
-            gbOrder.Controls.Add(tcOrders);
-            gbOrder.Location = new Point(12, 421);
-            gbOrder.Name = "gbOrder";
-            gbOrder.Size = new Size(403, 443);
-            gbOrder.TabIndex = 11;
-            gbOrder.TabStop = false;
-            gbOrder.Text = "Работа с клиентами";
+            gbClient.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            gbClient.Controls.Add(tcOrders);
+            gbClient.Location = new Point(12, 421);
+            gbClient.Name = "gbClient";
+            gbClient.Size = new Size(403, 443);
+            gbClient.TabIndex = 3;
+            gbClient.TabStop = false;
+            gbClient.Text = "Работа с клиентами";
             // 
             // tcOrders
             // 
@@ -190,21 +192,21 @@
             tbNumberToAdd.Mask = "+7 999 000-00-00";
             tbNumberToAdd.Name = "tbNumberToAdd";
             tbNumberToAdd.Size = new Size(264, 23);
-            tbNumberToAdd.TabIndex = 22;
+            tbNumberToAdd.TabIndex = 8;
             // 
             // dtpBirthDateToAdd
             // 
             dtpBirthDateToAdd.Location = new Point(106, 143);
             dtpBirthDateToAdd.Name = "dtpBirthDateToAdd";
             dtpBirthDateToAdd.Size = new Size(264, 23);
-            dtpBirthDateToAdd.TabIndex = 21;
+            dtpBirthDateToAdd.TabIndex = 7;
             // 
             // tbEmailToAdd
             // 
             tbEmailToAdd.Location = new Point(106, 238);
             tbEmailToAdd.Name = "tbEmailToAdd";
             tbEmailToAdd.Size = new Size(264, 23);
-            tbEmailToAdd.TabIndex = 20;
+            tbEmailToAdd.TabIndex = 9;
             // 
             // label7
             // 
@@ -238,7 +240,7 @@
             tbPatronymicToAdd.Location = new Point(106, 98);
             tbPatronymicToAdd.Name = "tbPatronymicToAdd";
             tbPatronymicToAdd.Size = new Size(264, 23);
-            tbPatronymicToAdd.TabIndex = 14;
+            tbPatronymicToAdd.TabIndex = 6;
             // 
             // label3
             // 
@@ -254,7 +256,7 @@
             tbNameToAdd.Location = new Point(106, 52);
             tbNameToAdd.Name = "tbNameToAdd";
             tbNameToAdd.Size = new Size(264, 23);
-            tbNameToAdd.TabIndex = 12;
+            tbNameToAdd.TabIndex = 5;
             // 
             // label2
             // 
@@ -270,7 +272,7 @@
             tbSurnameToAdd.Location = new Point(106, 13);
             tbSurnameToAdd.Name = "tbSurnameToAdd";
             tbSurnameToAdd.Size = new Size(264, 23);
-            tbSurnameToAdd.TabIndex = 10;
+            tbSurnameToAdd.TabIndex = 4;
             // 
             // label1
             // 
@@ -286,7 +288,7 @@
             btnCreateClient.Location = new Point(6, 289);
             btnCreateClient.Name = "btnCreateClient";
             btnCreateClient.Size = new Size(364, 36);
-            btnCreateClient.TabIndex = 8;
+            btnCreateClient.TabIndex = 10;
             btnCreateClient.Text = "Добавить клиента";
             btnCreateClient.UseVisualStyleBackColor = true;
             btnCreateClient.Click += btnCreateClient_Click;
@@ -321,21 +323,21 @@
             tbNumberToEdit.Mask = "+7 999 000-00-00";
             tbNumberToEdit.Name = "tbNumberToEdit";
             tbNumberToEdit.Size = new Size(264, 23);
-            tbNumberToEdit.TabIndex = 33;
+            tbNumberToEdit.TabIndex = 15;
             // 
             // dtpBirthDateToEdit
             // 
             dtpBirthDateToEdit.Location = new Point(107, 143);
             dtpBirthDateToEdit.Name = "dtpBirthDateToEdit";
             dtpBirthDateToEdit.Size = new Size(263, 23);
-            dtpBirthDateToEdit.TabIndex = 32;
+            dtpBirthDateToEdit.TabIndex = 14;
             // 
             // tbEmailToEdit
             // 
             tbEmailToEdit.Location = new Point(107, 238);
             tbEmailToEdit.Name = "tbEmailToEdit";
             tbEmailToEdit.Size = new Size(264, 23);
-            tbEmailToEdit.TabIndex = 31;
+            tbEmailToEdit.TabIndex = 16;
             // 
             // label6
             // 
@@ -369,7 +371,7 @@
             tbPatronymicToEdit.Location = new Point(107, 98);
             tbPatronymicToEdit.Name = "tbPatronymicToEdit";
             tbPatronymicToEdit.Size = new Size(264, 23);
-            tbPatronymicToEdit.TabIndex = 26;
+            tbPatronymicToEdit.TabIndex = 13;
             // 
             // label10
             // 
@@ -385,7 +387,7 @@
             tbNameToEdit.Location = new Point(107, 52);
             tbNameToEdit.Name = "tbNameToEdit";
             tbNameToEdit.Size = new Size(264, 23);
-            tbNameToEdit.TabIndex = 24;
+            tbNameToEdit.TabIndex = 12;
             // 
             // label11
             // 
@@ -401,7 +403,7 @@
             tbSurnameToEdit.Location = new Point(107, 13);
             tbSurnameToEdit.Name = "tbSurnameToEdit";
             tbSurnameToEdit.Size = new Size(264, 23);
-            tbSurnameToEdit.TabIndex = 22;
+            tbSurnameToEdit.TabIndex = 11;
             // 
             // label12
             // 
@@ -427,27 +429,29 @@
             btnDeleteClient.Location = new Point(7, 346);
             btnDeleteClient.Name = "btnDeleteClient";
             btnDeleteClient.Size = new Size(364, 35);
-            btnDeleteClient.TabIndex = 5;
+            btnDeleteClient.TabIndex = 18;
             btnDeleteClient.Text = "Удалить клиента";
             btnDeleteClient.UseVisualStyleBackColor = true;
             btnDeleteClient.Click += btnDeleteClient_Click;
             // 
-            // gbOrderDetails
+            // gbCars
             // 
-            gbOrderDetails.Controls.Add(dgvCars);
-            gbOrderDetails.Controls.Add(btnDeleteCarFromClient);
-            gbOrderDetails.Controls.Add(btnOpenAddCarToClientForm);
-            gbOrderDetails.Location = new Point(421, 483);
-            gbOrderDetails.Name = "gbOrderDetails";
-            gbOrderDetails.Size = new Size(629, 381);
-            gbOrderDetails.TabIndex = 12;
-            gbOrderDetails.TabStop = false;
-            gbOrderDetails.Text = "Автомобили клиента";
+            gbCars.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            gbCars.Controls.Add(dgvCars);
+            gbCars.Controls.Add(btnDeleteCarFromClient);
+            gbCars.Controls.Add(btnOpenAddCarToClientForm);
+            gbCars.Location = new Point(421, 483);
+            gbCars.Name = "gbCars";
+            gbCars.Size = new Size(629, 381);
+            gbCars.TabIndex = 12;
+            gbCars.TabStop = false;
+            gbCars.Text = "Автомобили клиента";
             // 
             // dgvCars
             // 
             dgvCars.AllowUserToAddRows = false;
             dgvCars.AllowUserToDeleteRows = false;
+            dgvCars.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvCars.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCars.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCars.Columns.AddRange(new DataGridViewColumn[] { CarBrand, CarModel, CarNumber, CarYear, CarVIN, CarMileage, CarId, OwnershipId });
@@ -457,7 +461,7 @@
             dgvCars.RowTemplate.Height = 25;
             dgvCars.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvCars.Size = new Size(613, 238);
-            dgvCars.TabIndex = 4;
+            dgvCars.TabIndex = 19;
             // 
             // CarBrand
             // 
@@ -522,7 +526,7 @@
             btnDeleteCarFromClient.Location = new Point(185, 284);
             btnDeleteCarFromClient.Name = "btnDeleteCarFromClient";
             btnDeleteCarFromClient.Size = new Size(169, 43);
-            btnDeleteCarFromClient.TabIndex = 7;
+            btnDeleteCarFromClient.TabIndex = 21;
             btnDeleteCarFromClient.Text = "Открепить автомобиль";
             btnDeleteCarFromClient.UseVisualStyleBackColor = true;
             btnDeleteCarFromClient.Click += btnDeleteCarFromClient_Click;
@@ -532,17 +536,18 @@
             btnOpenAddCarToClientForm.Location = new Point(10, 284);
             btnOpenAddCarToClientForm.Name = "btnOpenAddCarToClientForm";
             btnOpenAddCarToClientForm.Size = new Size(169, 43);
-            btnOpenAddCarToClientForm.TabIndex = 8;
+            btnOpenAddCarToClientForm.TabIndex = 20;
             btnOpenAddCarToClientForm.Text = "Прикрепить автомобиль";
             btnOpenAddCarToClientForm.UseVisualStyleBackColor = true;
             btnOpenAddCarToClientForm.Click += btnOpenAddCarToClientForm_Click;
             // 
             // btnHistory
             // 
+            btnHistory.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             btnHistory.Location = new Point(427, 427);
             btnHistory.Name = "btnHistory";
             btnHistory.Size = new Size(623, 42);
-            btnHistory.TabIndex = 13;
+            btnHistory.TabIndex = 2;
             btnHistory.Text = "Посмотреть историю заказов клиента";
             btnHistory.UseVisualStyleBackColor = true;
             btnHistory.Click += btnHistory_Click;
@@ -550,10 +555,10 @@
             // btnUpdate
             // 
             btnUpdate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnUpdate.Location = new Point(975, 4);
+            btnUpdate.Location = new Point(977, 4);
             btnUpdate.Name = "btnUpdate";
             btnUpdate.Size = new Size(75, 23);
-            btnUpdate.TabIndex = 19;
+            btnUpdate.TabIndex = 0;
             btnUpdate.Text = "Обновить";
             btnUpdate.UseVisualStyleBackColor = true;
             btnUpdate.Click += btnUpdate_Click;
@@ -562,22 +567,23 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1062, 877);
+            ClientSize = new Size(1064, 877);
             Controls.Add(btnUpdate);
             Controls.Add(btnHistory);
-            Controls.Add(gbOrderDetails);
-            Controls.Add(gbOrder);
+            Controls.Add(gbCars);
+            Controls.Add(gbClient);
             Controls.Add(dgvClients);
             Name = "ClientsForm";
             Text = "База клиентов";
+            Load += ClientsForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvClients).EndInit();
-            gbOrder.ResumeLayout(false);
+            gbClient.ResumeLayout(false);
             tcOrders.ResumeLayout(false);
             tpNewOrder.ResumeLayout(false);
             tpNewOrder.PerformLayout();
             tpCurrentOrder.ResumeLayout(false);
             tpCurrentOrder.PerformLayout();
-            gbOrderDetails.ResumeLayout(false);
+            gbCars.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvCars).EndInit();
             ResumeLayout(false);
         }
@@ -585,7 +591,7 @@
         #endregion
 
         private DataGridView dgvClients;
-        private GroupBox gbOrder;
+        private GroupBox gbClient;
         private TabControl tcOrders;
         private TabPage tpNewOrder;
         private Label label1;
@@ -614,7 +620,7 @@
         private Label label11;
         private TextBox tbSurnameToEdit;
         private Label label12;
-        private GroupBox gbOrderDetails;
+        private GroupBox gbCars;
         private DataGridView dgvCars;
         private Button btnDeleteCarFromClient;
         private Button btnOpenAddCarToClientForm;

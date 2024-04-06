@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             dgvClients = new DataGridView();
-            btnCancel = new Button();
-            btnAdd = new Button();
             ClientFullName = new DataGridViewTextBoxColumn();
             birth_date = new DataGridViewTextBoxColumn();
             phone_number = new DataGridViewTextBoxColumn();
             email = new DataGridViewTextBoxColumn();
             ClientId = new DataGridViewTextBoxColumn();
+            btnCancel = new Button();
+            btnAdd = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClients).BeginInit();
             SuspendLayout();
             // 
@@ -43,6 +43,7 @@
             // 
             dgvClients.AllowUserToAddRows = false;
             dgvClients.AllowUserToDeleteRows = false;
+            dgvClients.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvClients.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvClients.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvClients.Columns.AddRange(new DataGridViewColumn[] { ClientFullName, birth_date, phone_number, email, ClientId });
@@ -52,27 +53,7 @@
             dgvClients.RowTemplate.Height = 25;
             dgvClients.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvClients.Size = new Size(750, 260);
-            dgvClients.TabIndex = 5;
-            // 
-            // btnCancel
-            // 
-            btnCancel.Location = new Point(646, 287);
-            btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(116, 39);
-            btnCancel.TabIndex = 7;
-            btnCancel.Text = "Отмена";
-            btnCancel.UseVisualStyleBackColor = true;
-            btnCancel.Click += btnCancel_Click;
-            // 
-            // btnAdd
-            // 
-            btnAdd.Location = new Point(524, 287);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(116, 39);
-            btnAdd.TabIndex = 6;
-            btnAdd.Text = "Выбрать";
-            btnAdd.UseVisualStyleBackColor = true;
-            btnAdd.Click += btnAdd_Click;
+            dgvClients.TabIndex = 1;
             // 
             // ClientFullName
             // 
@@ -110,6 +91,28 @@
             ClientId.ReadOnly = true;
             ClientId.Visible = false;
             // 
+            // btnCancel
+            // 
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnCancel.Location = new Point(646, 287);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(116, 39);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "Отмена";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnAdd.Location = new Point(524, 287);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(116, 39);
+            btnAdd.TabIndex = 2;
+            btnAdd.Text = "Выбрать";
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
+            // 
             // AddClientToCarForm
             // 
             AcceptButton = btnAdd;
@@ -120,8 +123,9 @@
             Controls.Add(btnCancel);
             Controls.Add(btnAdd);
             Controls.Add(dgvClients);
+            MinimumSize = new Size(790, 379);
             Name = "AddClientToCarForm";
-            Text = "AddClientToCarForm";
+            Text = "Выбор клиента";
             ((System.ComponentModel.ISupportInitialize)dgvClients).EndInit();
             ResumeLayout(false);
         }

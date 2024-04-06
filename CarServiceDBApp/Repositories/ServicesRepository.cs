@@ -1,5 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using Mysqlx.Crud;
 using System.Configuration;
 using System.Data;
 
@@ -139,7 +138,7 @@ namespace CarServiceDBApp.Repositories
             {
                 connection.Open();
 
-                string query = "UPDATE Services SET name = @name, description = @description, price = @price WHERE id=@id";
+                string query = "UPDATE Services SET name = @name, description = @description, price = @price WHERE id = @id";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {

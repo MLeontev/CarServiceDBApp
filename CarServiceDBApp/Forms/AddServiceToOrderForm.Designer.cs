@@ -43,6 +43,7 @@
             // 
             dgvServicesToOrder.AllowUserToAddRows = false;
             dgvServicesToOrder.AllowUserToDeleteRows = false;
+            dgvServicesToOrder.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvServicesToOrder.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvServicesToOrder.Columns.AddRange(new DataGridViewColumn[] { ServiceId, ServiceName, Price });
             dgvServicesToOrder.Location = new Point(12, 12);
@@ -51,7 +52,7 @@
             dgvServicesToOrder.RowTemplate.Height = 25;
             dgvServicesToOrder.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvServicesToOrder.Size = new Size(520, 240);
-            dgvServicesToOrder.TabIndex = 0;
+            dgvServicesToOrder.TabIndex = 1;
             // 
             // ServiceId
             // 
@@ -81,35 +82,39 @@
             // 
             // cbWorkerToService
             // 
+            cbWorkerToService.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             cbWorkerToService.DropDownStyle = ComboBoxStyle.DropDownList;
             cbWorkerToService.FormattingEnabled = true;
             cbWorkerToService.Location = new Point(12, 300);
             cbWorkerToService.Name = "cbWorkerToService";
             cbWorkerToService.Size = new Size(520, 23);
-            cbWorkerToService.TabIndex = 1;
+            cbWorkerToService.TabIndex = 2;
             // 
             // btnAddServiceToOrder
             // 
+            btnAddServiceToOrder.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnAddServiceToOrder.Location = new Point(364, 349);
             btnAddServiceToOrder.Name = "btnAddServiceToOrder";
             btnAddServiceToOrder.Size = new Size(81, 39);
-            btnAddServiceToOrder.TabIndex = 2;
+            btnAddServiceToOrder.TabIndex = 3;
             btnAddServiceToOrder.Text = "Добавить";
             btnAddServiceToOrder.UseVisualStyleBackColor = true;
             btnAddServiceToOrder.Click += btnAddServiceToOrder_Click;
             // 
             // btnCancel
             // 
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCancel.Location = new Point(451, 349);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(81, 39);
-            btnCancel.TabIndex = 3;
+            btnCancel.TabIndex = 4;
             btnCancel.Text = "Отмена";
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Location = new Point(12, 276);
             label1.Name = "label1";
@@ -129,6 +134,7 @@
             Controls.Add(btnAddServiceToOrder);
             Controls.Add(cbWorkerToService);
             Controls.Add(dgvServicesToOrder);
+            MinimumSize = new Size(560, 439);
             Name = "AddServiceToOrderForm";
             Text = "Добавление услуги к заказу";
             ((System.ComponentModel.ISupportInitialize)dgvServicesToOrder).EndInit();

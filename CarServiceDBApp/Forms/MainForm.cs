@@ -1,11 +1,10 @@
+using CarServiceDBApp.Authorization;
 using CarServiceDBApp.Forms;
 using CarServiceDBApp.Helpers;
 using CarServiceDBApp.Repositories;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
 using OfficeOpenXml;
 using System.Data;
-using System.Globalization;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace CarServiceDBApp
@@ -20,6 +19,7 @@ namespace CarServiceDBApp
         OwnershipRepository ownershipRepository;
         StatusRepository statusRepository;
         ReportsRepository reportsRepository;
+
 
         bool onlyActiveOrders;
         public bool OnlyActiveOrders { get => onlyActiveOrders; set => onlyActiveOrders = value; }
@@ -39,8 +39,39 @@ namespace CarServiceDBApp
 
             OnlyActiveOrders = true;
             btnActiveOrders.Enabled = false;
+        }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            RoleInterface(User.PositionId);
             UpadateAll();
+        }
+
+        private void RoleInterface(int positionId)
+        {
+            switch (positionId)
+            {
+                case 21495:
+                    gbOrder.Enabled = false;
+                    gbStatus.Enabled = false;
+                    gbOrderDetails.Enabled = false;
+                    break;
+                case 18511:
+                    автомобилиToolStripMenuItem.Enabled = false;
+                    клиентыToolStripMenuItem.Enabled = false;
+                    сотрудникиToolStripMenuItem.Enabled = false;
+                    tsddbReports.Enabled = false;
+                    button1.Enabled = false;
+                    btnEditWorker.Enabled = false;
+                    btnDeleteServiceFromOrder.Enabled = false;
+                    btnOpenAddServiceForm.Enabled = false;
+                    gbOrder.Enabled = false;
+                    gbStatus.Enabled = false;
+                    break;
+                case 23796:
+                    сотрудникиToolStripMenuItem.Enabled = false;
+                    break;
+            }
         }
 
         private void HandleDatabaseError(MySqlException ex)
@@ -119,54 +150,70 @@ namespace CarServiceDBApp
                     int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
                     dgvOrderDetails.DataSource = orderDetailsRepository.GetDetailsByOrderId(orderId);
 
-                    LoadClientsToEdit();
-
-                    dtpDateToEdit.Value = (DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value;
-
-                    int statusId = (int)dgvOrders.SelectedRows[0].Cells["StatusId"].Value;
-                    if (statusId == 1)
+                    if (User.PositionId == 23796)
                     {
-                        btnStatusЗаявка.Enabled = false;
-                        btnStatusВРаботе.Enabled = true;
-                        btnStatusВыполнен.Enabled = true;
-                        btnStatusОтменен.Enabled = true;
+                        LoadClientsToEdit();
 
-                        bntEditOrder.Enabled = true;
+                        dtpDateToEdit.Value = (DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value;
 
-                        gbOrderDetails.Enabled = true;
+                        int statusId = (int)dgvOrders.SelectedRows[0].Cells["StatusId"].Value;
+                        if (statusId == 1)
+                        {
+                            btnStatusЗаявка.Enabled = false;
+                            btnStatusВРаботе.Enabled = true;
+                            btnStatusВыполнен.Enabled = true;
+                            btnStatusОтменен.Enabled = true;
+
+                            bntEditOrder.Enabled = true;
+
+                            gbOrderDetails.Enabled = true;
+                        }
+                        else if (statusId == 2)
+                        {
+                            btnStatusЗаявка.Enabled = false;
+                            btnStatusВРаботе.Enabled = false;
+                            btnStatusВыполнен.Enabled = true;
+                            btnStatusОтменен.Enabled = true;
+
+                            bntEditOrder.Enabled = true;
+
+                            gbOrderDetails.Enabled = true;
+                        }
+                        else if (statusId == 3)
+                        {
+                            btnStatusЗаявка.Enabled = false;
+                            btnStatusВРаботе.Enabled = false;
+                            btnStatusВыполнен.Enabled = false;
+                            btnStatusОтменен.Enabled = false;
+
+                            bntEditOrder.Enabled = false;
+
+                            gbOrderDetails.Enabled = false;
+                        }
+                        else if (statusId == 4)
+                        {
+                            btnStatusЗаявка.Enabled = false;
+                            btnStatusВРаботе.Enabled = false;
+                            btnStatusВыполнен.Enabled = false;
+                            btnStatusОтменен.Enabled = false;
+
+                            bntEditOrder.Enabled = false;
+
+                            gbOrderDetails.Enabled = false;
+                        }
                     }
-                    else if (statusId == 2)
+
+                    if (User.PositionId == 18511)
                     {
-                        btnStatusЗаявка.Enabled = false;
-                        btnStatusВРаботе.Enabled = false;
-                        btnStatusВыполнен.Enabled = true;
-                        btnStatusОтменен.Enabled = true;
-
-                        bntEditOrder.Enabled = true;
-
-                        gbOrderDetails.Enabled = true;
-                    }
-                    else if (statusId == 3)
-                    {
-                        btnStatusЗаявка.Enabled = false;
-                        btnStatusВРаботе.Enabled = false;
-                        btnStatusВыполнен.Enabled = false;
-                        btnStatusОтменен.Enabled = false;
-
-                        bntEditOrder.Enabled = false;
-
-                        gbOrderDetails.Enabled = false;
-                    }
-                    else if (statusId == 4)
-                    {
-                        btnStatusЗаявка.Enabled = false;
-                        btnStatusВРаботе.Enabled = false;
-                        btnStatusВыполнен.Enabled = false;
-                        btnStatusОтменен.Enabled = false;
-
-                        bntEditOrder.Enabled = false;
-
-                        gbOrderDetails.Enabled = false;
+                        int statusId = (int)dgvOrders.SelectedRows[0].Cells["StatusId"].Value;
+                        if (statusId == 1 || statusId == 2)
+                        {
+                            gbOrderDetails.Enabled = true;
+                        }
+                        else if (statusId == 3 || statusId == 4)
+                        {
+                            gbOrderDetails.Enabled = false;
+                        }
                     }
                 }
             }
@@ -182,137 +229,181 @@ namespace CarServiceDBApp
 
         private void btnStatusЗаявка_Click(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count == 1)
+            try
             {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                ordersRepository.UpdateStatus(orderId, 1);
-                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(1);
+                if (dgvOrders.SelectedRows.Count == 1)
+                {
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    ordersRepository.UpdateStatus(orderId, 1);
+                    dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(1);
 
-                btnStatusЗаявка.Enabled = false;
-                btnStatusВРаботе.Enabled = true;
-                btnStatusВыполнен.Enabled = true;
-                btnStatusОтменен.Enabled = true;
+                    btnStatusЗаявка.Enabled = false;
+                    btnStatusВРаботе.Enabled = true;
+                    btnStatusВыполнен.Enabled = true;
+                    btnStatusОтменен.Enabled = true;
 
-                dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 1;
+                    dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 1;
+                }
+                else if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                }
             }
-            else if (dgvOrders.SelectedRows.Count == 0)
+            catch (MySqlException ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                HandleDatabaseError(ex);
             }
-            else
+            catch (Exception ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
         private void btnStatusВРаботе_Click(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count == 1)
+            try
             {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                ordersRepository.UpdateStatus(orderId, 2);
-                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(2);
+                if (dgvOrders.SelectedRows.Count == 1)
+                {
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    ordersRepository.UpdateStatus(orderId, 2);
+                    dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(2);
 
-                btnStatusЗаявка.Enabled = false;
-                btnStatusВРаботе.Enabled = false;
-                btnStatusВыполнен.Enabled = true;
-                btnStatusОтменен.Enabled = true;
+                    btnStatusЗаявка.Enabled = false;
+                    btnStatusВРаботе.Enabled = false;
+                    btnStatusВыполнен.Enabled = true;
+                    btnStatusОтменен.Enabled = true;
 
-                dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 2;
+                    dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 2;
+                }
+                else if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                }
             }
-            else if (dgvOrders.SelectedRows.Count == 0)
+            catch (MySqlException ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                HandleDatabaseError(ex);
             }
-            else
+            catch (Exception ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
         private void btnStatusВыполнен_Click(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count == 1)
+            try
             {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-
-                bool hasUncompletedOrder = false;
-
-                foreach (DataGridViewRow row in dgvOrderDetails.Rows)
+                if (dgvOrders.SelectedRows.Count == 1)
                 {
-                    string status = row.Cells["Status"].Value.ToString();
-                    if (status != "Выполнена")
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+
+                    bool hasUncompletedOrder = false;
+
+                    foreach (DataGridViewRow row in dgvOrderDetails.Rows)
                     {
-                        hasUncompletedOrder = true;
-                        break;
-                    }
-                }
-
-                if (hasUncompletedOrder)
-                {
-                    MessageBox.Show("Выполнены не все услуги.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                {
-                    CompletionDateForm completionDateForm = new CompletionDateForm((DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value);
-                    if (completionDateForm.ShowDialog() == DialogResult.OK)
-                    {
-                        ordersRepository.UpdateStatus(orderId, 3);
-                        ordersRepository.UpdateCompletionDate(orderId, completionDateForm.CompletionDate);
-                        dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(3);
-                        dgvOrders.SelectedRows[0].Cells["CompletionDate"].Value = completionDateForm.CompletionDate.Date;
-
-                        btnStatusЗаявка.Enabled = false;
-                        btnStatusВРаботе.Enabled = false;
-                        btnStatusВыполнен.Enabled = false;
-                        btnStatusОтменен.Enabled = false;
-
-                        dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 3;
-
-                        if (OnlyActiveOrders)
+                        string status = row.Cells["Status"].Value.ToString();
+                        if (status != "Выполнена")
                         {
-                            dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                            hasUncompletedOrder = true;
+                            break;
+                        }
+                    }
+
+                    if (hasUncompletedOrder)
+                    {
+                        MessageBox.Show("Выполнены не все услуги.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        CompletionDateForm completionDateForm = new CompletionDateForm((DateTime)dgvOrders.SelectedRows[0].Cells["AppointmentDate"].Value);
+                        if (completionDateForm.ShowDialog() == DialogResult.OK)
+                        {
+                            ordersRepository.UpdateStatus(orderId, 3);
+                            ordersRepository.UpdateCompletionDate(orderId, completionDateForm.CompletionDate);
+                            dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(3);
+                            dgvOrders.SelectedRows[0].Cells["CompletionDate"].Value = completionDateForm.CompletionDate.Date;
+
+                            btnStatusЗаявка.Enabled = false;
+                            btnStatusВРаботе.Enabled = false;
+                            btnStatusВыполнен.Enabled = false;
+                            btnStatusОтменен.Enabled = false;
+
+                            dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 3;
+
+                            if (OnlyActiveOrders)
+                            {
+                                dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                            }
                         }
                     }
                 }
+                else if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                }
             }
-            else if (dgvOrders.SelectedRows.Count == 0)
+            catch (MySqlException ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                HandleDatabaseError(ex);
             }
-            else
+            catch (Exception ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
         private void btnStatusОтменен_Click(object sender, EventArgs e)
         {
-            if (dgvOrders.SelectedRows.Count == 1)
+            try
             {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                ordersRepository.UpdateStatus(orderId, 4);
-                dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(4);
-
-                btnStatusЗаявка.Enabled = false;
-                btnStatusВРаботе.Enabled = false;
-                btnStatusВыполнен.Enabled = false;
-                btnStatusОтменен.Enabled = false;
-
-                dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 4;
-
-                if (OnlyActiveOrders)
+                if (dgvOrders.SelectedRows.Count == 1)
                 {
-                    dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    ordersRepository.UpdateStatus(orderId, 4);
+                    dgvOrders.SelectedRows[0].Cells["StatusName"].Value = statusRepository.GetStatusById(4);
+
+                    btnStatusЗаявка.Enabled = false;
+                    btnStatusВРаботе.Enabled = false;
+                    btnStatusВыполнен.Enabled = false;
+                    btnStatusОтменен.Enabled = false;
+
+                    dgvOrders.SelectedRows[0].Cells["StatusId"].Value = 4;
+
+                    if (OnlyActiveOrders)
+                    {
+                        dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                    }
+                }
+                else if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
                 }
             }
-            else if (dgvOrders.SelectedRows.Count == 0)
+            catch (MySqlException ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите один заказ для изменения статуса");
+                HandleDatabaseError(ex);
             }
-            else
+            catch (Exception ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите только один заказ для изменения статуса");
+                ErrorHandler.HandleUnknownError(ex);
             }
         }
 
@@ -379,6 +470,8 @@ namespace CarServiceDBApp
                     int orderDetailsId = Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["OrderDetailsId"].Value);
                     orderDetailsRepository.CompleteService(orderDetailsId);
                     dgvOrderDetails.SelectedRows[0].Cells["Status"].Value = "Выполнена";
+                    btnCompleteService.Enabled = false;
+                    btnEditWorker.Enabled = false;
                 }
                 else if (dgvOrderDetails.SelectedRows.Count == 0)
                 {
@@ -680,15 +773,32 @@ namespace CarServiceDBApp
                 {
                     string orderDetailsStatus = dgvOrderDetails.SelectedRows[0].Cells["Status"].Value.ToString();
 
-                    if (orderDetailsStatus == "Выполнена")
+                    if (User.PositionId == 23796)
                     {
-                        btnCompleteService.Enabled = false;
-                        btnEditWorker.Enabled = false;
+                        if (orderDetailsStatus == "Выполнена")
+                        {
+                            btnCompleteService.Enabled = false;
+                            btnEditWorker.Enabled = false;
+                        }
+                        else
+                        {
+                            btnCompleteService.Enabled = true;
+                            btnEditWorker.Enabled = true;
+                        }
                     }
-                    else
+
+                    else if (User.PositionId == 18511)
                     {
-                        btnCompleteService.Enabled = true;
-                        btnEditWorker.Enabled = true;
+                        if (orderDetailsStatus == "Выполнена")
+                        {
+                            btnCompleteService.Enabled = false;
+                        }
+                        else
+                        {
+                            btnCompleteService.Enabled = false;
+                            if (User.Id == (int)dgvOrderDetails.SelectedRows[0].Cells["WorkerId"].Value)
+                                btnCompleteService.Enabled = true;
+                        }
                     }
                 }
             }
@@ -793,6 +903,12 @@ namespace CarServiceDBApp
 
                         worksheet.Cells["A5"].LoadFromDataTable(reportData, false);
 
+                        var tableCells = worksheet.Cells["A4:D" + (reportData.Rows.Count + 4)];
+                        tableCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
                         FileInfo excelFile = new FileInfo($"Отчет о мастерах {startDate.ToShortDateString()}-{endDate.ToShortDateString()}.xlsx");
 
                         excelPackage.SaveAs(excelFile);
@@ -848,9 +964,13 @@ namespace CarServiceDBApp
 
                         worksheet.Cells["A5"].LoadFromDataTable(reportData, false);
 
-                        FileInfo excelFile = new FileInfo(
-                            $"Отчет о выполненных услугах {startDate.ToShortDateString()}-{endDate.ToShortDateString()}.xlsx"
-                        );
+                        var tableCells = worksheet.Cells["A4:C" + (reportData.Rows.Count + 4)];
+                        tableCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+                        FileInfo excelFile = new FileInfo($"Отчет о выполненных услугах {startDate.ToShortDateString()}-{endDate.ToShortDateString()}.xlsx");
 
                         excelPackage.SaveAs(excelFile);
 
@@ -913,10 +1033,16 @@ namespace CarServiceDBApp
                         headerCells.Style.Font.Bold = true;
                         headerCells.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 
-                        ExcelRange dateRange = worksheet.Cells["E5:F" + (reportData.Rows.Count + 4)];
+                        ExcelRange dateRange = worksheet.Cells["E5:F" + (reportData.Rows.Count + 5)];
                         dateRange.Style.Numberformat.Format = "dd-mm-yyyy";
 
                         worksheet.Cells["A5"].LoadFromDataTable(reportData, false);
+
+                        var tableCells = worksheet.Cells["A4:H" + (reportData.Rows.Count + 4)];
+                        tableCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        tableCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
 
                         FileInfo excelFile = new FileInfo($"Отчет о заказах {startDate.ToShortDateString()}-{endDate.ToShortDateString()}.xlsx");
 
@@ -934,6 +1060,151 @@ namespace CarServiceDBApp
             {
                 ErrorHandler.HandleUnknownError(ex);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvOrders.SelectedRows.Count == 1)
+                {
+                    var selectedOrder = dgvOrders.SelectedRows[0];
+
+                    int orderId = Convert.ToInt32(selectedOrder.Cells["OrderId"].Value);
+                    string date = ((DateTime)selectedOrder.Cells["AppointmentDate"].Value).ToShortDateString().ToString();
+
+                    int clientId = ownershipRepository.GetClientId(Convert.ToInt32(selectedOrder.Cells["OwnershipId"].Value));
+                    DataTable clientDT = clientsRepository.GetClient(clientId);
+                    DataRow client = clientDT.Rows[0];
+                    string clientFullName = Convert.ToString(client["ClientFullName"]);
+                    string clientPhoneNumber = Convert.ToString(client["ClientPhoneNumber"]);
+
+                    int carId = ownershipRepository.GetCarId(Convert.ToInt32(selectedOrder.Cells["OwnershipId"].Value));
+                    DataTable carDT = carsRepository.GetCar(carId);
+                    DataRow car = carDT.Rows[0];
+                    string carName = Convert.ToString(car["brand"]) + " " + Convert.ToString(car["model"]);
+                    string number = Convert.ToString(car["registration_number"]);
+                    string VIN = Convert.ToString(car["VIN"]);
+                    int year = Convert.ToInt32(car["year"]);
+                    int mileage = Convert.ToInt32(car["mileage"]);
+
+                    DataTable servicesData = reportsRepository.GetDetailsData(orderId);
+
+                    int sum = Convert.ToInt32(selectedOrder.Cells["Sum"].Value);
+
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                    using (ExcelPackage excelPackage = new ExcelPackage())
+                    {
+                        ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Заказ наряд");
+
+                        worksheet.Cells["A1:D1"].Merge = true;
+                        worksheet.Cells["A1"].Value = $"Заказ-наряд №{orderId} от {date}";
+                        worksheet.Cells["A1"].Style.Font.Bold = true;
+                        worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                        worksheet.Cells["A2"].Value = "Заказчик:";
+                        worksheet.Cells["B2"].Value = clientFullName;
+
+                        worksheet.Cells["A3"].Value = "Номер телефона:";
+                        worksheet.Cells["B3"].Value = clientPhoneNumber;
+
+                        worksheet.Cells["A5"].Value = "Автомобиль:";
+                        worksheet.Cells["B5"].Value = carName;
+
+                        worksheet.Cells["A6"].Value = "Регистрационный номер:";
+                        worksheet.Cells["B6"].Value = number;
+
+                        worksheet.Cells["A7"].Value = "VIN:";
+                        worksheet.Cells["B7"].Value = VIN;
+
+                        worksheet.Cells["A8"].Value = "Год выпуска:";
+                        worksheet.Cells["B8"].Value = year;
+
+                        worksheet.Cells["A9"].Value = "Пробег:";
+                        worksheet.Cells["B9"].Value = mileage;
+
+                        var clientCells = worksheet.Cells["A2:B3"];
+                        clientCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        clientCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        clientCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        clientCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+                        var carCells = worksheet.Cells["A5:B9"];
+                        carCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        carCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        carCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        carCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+
+                        worksheet.Cells["A11:D11"].Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        worksheet.Cells["A11:D11"].Style.Font.Bold = true;
+                        worksheet.Cells["A11"].Value = "№";
+                        worksheet.Cells["B11"].Value = "Услуга";
+                        worksheet.Cells["C11"].Value = "Цена";
+                        worksheet.Cells["D11"].Value = "Исполнитель";
+
+                        int row = 12;
+                        int serviceNumber = 1;
+                        foreach (DataRow serviceRow in servicesData.Rows)
+                        {
+                            worksheet.Cells["A" + row].Value = serviceNumber;
+                            worksheet.Cells["B" + row].Value = serviceRow["ServiceName"].ToString();
+                            worksheet.Cells["C" + row].Value = serviceRow["Price"];
+                            worksheet.Cells["D" + row].Value = serviceRow["WorkerFullName"].ToString();
+                            row++;
+                            serviceNumber++;
+                        }
+
+                        var servicesCells = worksheet.Cells["A11:D" + (row - 1)];
+                        servicesCells.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        servicesCells.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        servicesCells.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+                        servicesCells.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
+
+
+                        worksheet.Cells["A" + row].Value = "Итого:";
+                        worksheet.Cells["C" + row].Value = sum.ToString() + " руб.";
+                        worksheet.Cells["A" + row + ":D" + row].Style.Font.Bold = true;
+                        worksheet.Cells["A" + (row + 2)].Value = "Мастер:";
+                        worksheet.Cells["A" + (row + 4)].Value = "Заказчик:";
+                        worksheet.Cells["B" + (row + 2)].Value = "______________________";
+                        worksheet.Cells["B" + (row + 4)].Value = "______________________";
+
+                        worksheet.PrinterSettings.PrintArea = worksheet.Cells["A1:D" + (row + 5)];
+
+                        worksheet.Cells.AutoFitColumns();
+
+                        string filePath = $"Заказ-наряд №{orderId} от {date}.xlsx";
+                        FileInfo excelFile = new FileInfo(filePath);
+                        excelPackage.SaveAs(excelFile);
+                        MessageBox.Show("Заказ-наряд сформирован");
+                    }
+                }
+                else if (dgvOrders.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите один заказ для составления заказ-наряда");
+                }
+                else
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите только один заказ для составления заказ-наряда");
+                }
+            }
+            catch (MySqlException ex)
+            {
+                HandleDatabaseError(ex);
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.HandleUnknownError(ex);
+            }
+        }
+
+
+        public event EventHandler MainFormClosed;
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MainFormClosed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CarServiceDBApp.Helpers;
+﻿using CarServiceDBApp.Authorization;
+using CarServiceDBApp.Helpers;
 using CarServiceDBApp.Repositories;
 using MySql.Data.MySqlClient;
 using System.Globalization;
@@ -16,8 +17,25 @@ namespace CarServiceDBApp.Forms
 
             servicesRepository = new();
             this.mainForm = mainForm;
+        }
 
+        private void ServicesForm_Load(object sender, EventArgs e)
+        {
+            RoleInterface(User.PositionId);
             UpdateServices();
+        }
+
+        private void RoleInterface(int positionId)
+        {
+            switch (positionId)
+            {
+                case 23796:
+                    gbService.Enabled = false;
+                    break;
+                case 18511:
+                    gbService.Enabled = false;
+                    break;
+            }
         }
 
         private void UpdateServices()
@@ -79,6 +97,8 @@ namespace CarServiceDBApp.Forms
                     tbNameToEdit.Clear();
                     tbPriceToEdit.Clear();
                     tbDescriptionToEdit.Clear();
+
+                    mainForm.UpadateAll();
                 }
                 else
                 {
@@ -136,6 +156,8 @@ namespace CarServiceDBApp.Forms
                     tbNameToAdd.Clear();
                     tbPriceToAdd.Clear();
                     tbDescriptionToAdd.Clear();
+
+                    mainForm.UpadateAll();
                 }
             }
             catch (MySqlException ex)
@@ -163,6 +185,8 @@ namespace CarServiceDBApp.Forms
                         int serviceId = Convert.ToInt32(dgvServices.CurrentRow.Cells["ServiceId"].Value);
                         servicesRepository.UpdateService(serviceId, name, price, description);
                         UpdateServices();
+
+                        mainForm.UpadateAll();
                     }
                 }
                 else
@@ -187,7 +211,7 @@ namespace CarServiceDBApp.Forms
             }
             else if (ex.Number == 1062)
             {
-                ErrorHandler.ShowErrorMessage("Такая услуга уже создана!");
+                ErrorHandler.ShowErrorMessage("Такая услуга уже создана");
             }
             else
             {

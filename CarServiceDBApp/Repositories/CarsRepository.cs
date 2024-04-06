@@ -35,6 +35,29 @@ namespace CarServiceDBApp.Repositories
             return dataTable;
         }
 
+        public DataTable GetCar(int id)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM Cars WHERE id = @id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        adapter.Fill(dataTable);
+                    }
+                }
+            }
+
+            return dataTable;
+        }
+
         public DataTable GetCarNamesByClientId(int clientId)
         {
             DataTable dataTable = new DataTable();

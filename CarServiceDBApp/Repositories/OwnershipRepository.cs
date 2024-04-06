@@ -43,6 +43,46 @@ namespace CarServiceDBApp.Repositories
             return ownershipId;
         }
 
+        public int GetClientId(int id)
+        {
+            int clientId;
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT Ownership.client_id 
+                                 FROM Ownership 
+                                 WHERE id = @id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    clientId = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+            return clientId;
+        }
+
+        public int GetCarId(int id)
+        {
+            int carId;
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT Ownership.car_id 
+                                 FROM Ownership 
+                                 WHERE id = @id";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    carId = Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+            return carId;
+        }
+
         public void DeleteOwnership(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))

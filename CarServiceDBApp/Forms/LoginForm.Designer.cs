@@ -31,16 +31,17 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
-            textBox1 = new TextBox();
-            button1 = new Button();
-            tbNumberToAdd = new MaskedTextBox();
+            tbPassword = new TextBox();
+            btnLogin = new Button();
+            tbNumber = new MaskedTextBox();
             SuspendLayout();
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top;
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(69, 24);
+            label1.Location = new Point(77, 24);
             label1.Name = "label1";
             label1.Size = new Size(198, 30);
             label1.TabIndex = 0;
@@ -64,43 +65,49 @@
             label3.TabIndex = 3;
             label3.Text = "Введите пароль:";
             // 
-            // textBox1
+            // tbPassword
             // 
-            textBox1.Location = new Point(182, 128);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(152, 23);
-            textBox1.TabIndex = 4;
+            tbPassword.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbPassword.Location = new Point(182, 128);
+            tbPassword.Name = "tbPassword";
+            tbPassword.Size = new Size(152, 23);
+            tbPassword.TabIndex = 2;
             // 
-            // button1
+            // btnLogin
             // 
-            button1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            button1.Location = new Point(12, 174);
-            button1.Name = "button1";
-            button1.Size = new Size(322, 33);
-            button1.TabIndex = 5;
-            button1.Text = "Войти";
-            button1.UseVisualStyleBackColor = true;
+            btnLogin.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnLogin.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            btnLogin.Location = new Point(12, 174);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(322, 33);
+            btnLogin.TabIndex = 3;
+            btnLogin.Text = "Войти";
+            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.Click += btnLogin_Click;
             // 
-            // tbNumberToAdd
+            // tbNumber
             // 
-            tbNumberToAdd.CutCopyMaskFormat = MaskFormat.ExcludePromptAndLiterals;
-            tbNumberToAdd.Location = new Point(182, 82);
-            tbNumberToAdd.Mask = "+7 000 000-00-00";
-            tbNumberToAdd.Name = "tbNumberToAdd";
-            tbNumberToAdd.Size = new Size(152, 23);
-            tbNumberToAdd.TabIndex = 23;
+            tbNumber.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbNumber.CutCopyMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            tbNumber.Location = new Point(182, 82);
+            tbNumber.Mask = "+7 000 000-00-00";
+            tbNumber.Name = "tbNumber";
+            tbNumber.Size = new Size(152, 23);
+            tbNumber.TabIndex = 1;
             // 
             // LoginForm
             // 
+            AcceptButton = btnLogin;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(346, 227);
-            Controls.Add(tbNumberToAdd);
-            Controls.Add(button1);
-            Controls.Add(textBox1);
+            ClientSize = new Size(353, 228);
+            Controls.Add(tbNumber);
+            Controls.Add(btnLogin);
+            Controls.Add(tbPassword);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            MinimumSize = new Size(369, 267);
             Name = "LoginForm";
             Text = "Вход";
             ResumeLayout(false);
@@ -112,8 +119,8 @@
         private Label label1;
         private Label label2;
         private Label label3;
-        private TextBox textBox1;
-        private Button button1;
-        private MaskedTextBox tbNumberToAdd;
+        private TextBox tbPassword;
+        private Button btnLogin;
+        private MaskedTextBox tbNumber;
     }
 }
