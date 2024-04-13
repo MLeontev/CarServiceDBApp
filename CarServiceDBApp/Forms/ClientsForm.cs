@@ -142,7 +142,7 @@ namespace CarServiceDBApp.Forms
         {
             if (string.IsNullOrEmpty(surname) || string.IsNullOrEmpty(name))
             {
-                ErrorHandler.ShowErrorMessage("Необходимо заполнить все обязательные поля (Фамилия, Имя, Дата рождения, номер телефона)");
+                ErrorHandler.ShowErrorMessage("Необходимо заполнить все обязательные поля (Фамилия, Имя, Дата рождения, Номер телефона)");
                 return false;
             }
 

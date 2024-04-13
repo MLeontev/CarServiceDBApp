@@ -78,7 +78,7 @@ namespace CarServiceDBApp
         {
             if (ex.Number == 1062)
             {
-                ErrorHandler.ShowErrorMessage("Заказ с указанными данными уже создан");
+                ErrorHandler.ShowErrorMessage("Заказ с указанными данными уже добавлен");
             }
             else
             {
@@ -624,40 +624,51 @@ namespace CarServiceDBApp
 
         private void btnCreateOrder_Click(object sender, EventArgs e)
         {
-            if (cbClientsToAdd.SelectedItem == null)
+            try
             {
-                ErrorHandler.ShowWarningMessage("Выберите клиента для создания заказа");
-                return;
-            }
+                if (cbClientsToAdd.SelectedItem == null)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите клиента для создания заказа");
+                    return;
+                }
 
-            if (cbCarsToAdd.SelectedItem == null)
+                if (cbCarsToAdd.SelectedItem == null)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите автомобиль для создания заказа");
+                    return;
+                }
+
+                if (cbWorkersToAdd.SelectedItem == null)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите мастера-приемщика для создания заказа");
+                    return;
+                }
+
+                DataRowView drvClient = (DataRowView)cbClientsToAdd.SelectedItem;
+                int clientId = Convert.ToInt32(drvClient["ClientId"]);
+
+                DataRowView drvCar = (DataRowView)cbCarsToAdd.SelectedItem;
+                int carId = Convert.ToInt32(drvCar["CarId"]);
+
+                int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
+
+                DataRowView drvWorker = (DataRowView)cbWorkersToAdd.SelectedItem;
+                int workerId = Convert.ToInt32(drvWorker["WorkerId"]);
+
+                DateTime dateTime = dptDateToAdd.Value;
+
+                ordersRepository.CreateOrder(ownershipId, dateTime, workerId);
+
+                UpdateOrders();
+            }
+            catch (MySqlException ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите автомобиль для создания заказа");
-                return;
+                HandleDatabaseError(ex);
             }
-
-            if (cbWorkersToAdd.SelectedItem == null)
+            catch (Exception ex)
             {
-                ErrorHandler.ShowWarningMessage("Выберите мастера-приемщика для создания заказа");
-                return;
+                ErrorHandler.HandleUnknownError(ex);
             }
-
-            DataRowView drvClient = (DataRowView)cbClientsToAdd.SelectedItem;
-            int clientId = Convert.ToInt32(drvClient["ClientId"]);
-
-            DataRowView drvCar = (DataRowView)cbCarsToAdd.SelectedItem;
-            int carId = Convert.ToInt32(drvCar["CarId"]);
-
-            int ownershipId = ownershipRepository.GetOwnershipId(clientId, carId);
-
-            DataRowView drvWorker = (DataRowView)cbWorkersToAdd.SelectedItem;
-            int workerId = Convert.ToInt32(drvWorker["WorkerId"]);
-
-            DateTime dateTime = dptDateToAdd.Value;
-
-            ordersRepository.CreateOrder(ownershipId, dateTime, workerId);
-
-            UpdateOrders();
         }
 
         private void LoadClientsToEdit()

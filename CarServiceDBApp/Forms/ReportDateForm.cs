@@ -38,7 +38,7 @@ namespace CarServiceDBApp.Forms
             }
             else if (selectedEndDate > currentDate)
             {
-                ErrorHandler.ShowErrorMessage("Дата окочания не может быть позже сегодняшней");
+                ErrorHandler.ShowErrorMessage("Дата окончания не может быть позже сегодняшней");
             }
             else if (selectedStartDate > selectedEndDate)
             {
