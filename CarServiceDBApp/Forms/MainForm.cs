@@ -67,6 +67,8 @@ namespace CarServiceDBApp
                     btnOpenAddServiceForm.Enabled = false;
                     gbOrder.Enabled = false;
                     gbStatus.Enabled = false;
+                    dgvOrderDetails.Columns["Price"].Visible = false;
+                    dgvOrders.Columns["Sum"].Visible = false;
                     break;
                 case 23796:
                     сотрудникиToolStripMenuItem.Enabled = false;
@@ -411,9 +413,13 @@ namespace CarServiceDBApp
         {
             if (dgvOrders.SelectedRows.Count == 1)
             {
-                int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
-                ordersRepository.DeleteOrderById(orderId);
-                dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выбранный заказ?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    int orderId = Convert.ToInt32(dgvOrders.SelectedRows[0].Cells["OrderId"].Value);
+                    ordersRepository.DeleteOrderById(orderId);
+                    dgvOrders.Rows.RemoveAt(dgvOrders.SelectedRows[0].Index);
+                }
             }
             else
             {
@@ -432,10 +438,14 @@ namespace CarServiceDBApp
 
                     if (Convert.ToInt32(dgvOrderDetails.SelectedRows[0].Cells["ServiceId"].Value) != 1)
                     {
-                        orderDetailsRepository.DeleteServiceFromOrder(orderDetailsId);
-                        dgvOrderDetails.Rows.RemoveAt(dgvOrderDetails.SelectedRows[0].Index);
+                        DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить услугу из заказа?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            orderDetailsRepository.DeleteServiceFromOrder(orderDetailsId);
+                            dgvOrderDetails.Rows.RemoveAt(dgvOrderDetails.SelectedRows[0].Index);
 
-                        dgvOrders.SelectedRows[0].Cells["Sum"].Value = ordersRepository.GetOrderSum(orderId);
+                            dgvOrders.SelectedRows[0].Cells["Sum"].Value = ordersRepository.GetOrderSum(orderId);
+                        }
                     }
                     else
                     {

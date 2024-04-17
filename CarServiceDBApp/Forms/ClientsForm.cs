@@ -270,10 +270,14 @@ namespace CarServiceDBApp.Forms
             {
                 if (dgvClients.SelectedRows.Count == 1)
                 {
-                    int clientId = Convert.ToInt32(dgvClients.CurrentRow.Cells["ClientId"].Value);
-                    clientsRepository.DeleteClient(clientId);
-                    dgvClients.Rows.RemoveAt(dgvClients.SelectedRows[0].Index);
-                    mainForm.UpadateAll();
+                    DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выбранного клиента?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        int clientId = Convert.ToInt32(dgvClients.CurrentRow.Cells["ClientId"].Value);
+                        clientsRepository.DeleteClient(clientId);
+                        dgvClients.Rows.RemoveAt(dgvClients.SelectedRows[0].Index);
+                        mainForm.UpadateAll();
+                    }
                 }
                 else if (dgvClients.SelectedRows.Count == 0)
                 {
@@ -304,10 +308,14 @@ namespace CarServiceDBApp.Forms
 
                     if (dgvCars.SelectedRows.Count == 1)
                     {
-                        int ownershipId = Convert.ToInt32(dgvCars.CurrentRow.Cells["OwnershipId"].Value);
-                        ownershipRepository.DeleteOwnership(ownershipId);
-                        dgvCars.Rows.RemoveAt(dgvCars.SelectedRows[0].Index);
-                        mainForm.UpadateAll();
+                        DialogResult result = MessageBox.Show("Вы уверены, что хотите открепить автомобиль?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            int ownershipId = Convert.ToInt32(dgvCars.CurrentRow.Cells["OwnershipId"].Value);
+                            ownershipRepository.DeleteOwnership(ownershipId);
+                            dgvCars.Rows.RemoveAt(dgvCars.SelectedRows[0].Index);
+                            mainForm.UpadateAll();
+                        }
                     }
                     else if (dgvCars.SelectedRows.Count == 0)
                     {

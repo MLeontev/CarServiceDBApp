@@ -275,10 +275,14 @@ namespace CarServiceDBApp.Forms
 
                     if (dgvClients.SelectedRows.Count == 1)
                     {
-                        int ownershipId = Convert.ToInt32(dgvClients.CurrentRow.Cells["OwnershipId"].Value);
-                        ownershipRepository.DeleteOwnership(ownershipId);
-                        dgvClients.Rows.RemoveAt(dgvClients.SelectedRows[0].Index);
-                        mainForm.UpadateAll();
+                        DialogResult result = MessageBox.Show("Вы уверены, что хотите открепить владельца?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            int ownershipId = Convert.ToInt32(dgvClients.CurrentRow.Cells["OwnershipId"].Value);
+                            ownershipRepository.DeleteOwnership(ownershipId);
+                            dgvClients.Rows.RemoveAt(dgvClients.SelectedRows[0].Index);
+                            mainForm.UpadateAll();
+                        }
                     }
                     else if (dgvClients.SelectedRows.Count == 0)
                     {
@@ -365,9 +369,14 @@ namespace CarServiceDBApp.Forms
                 if (dgvCars.SelectedRows.Count == 1)
                 {
                     int carId = Convert.ToInt32(dgvCars.CurrentRow.Cells["Id"].Value);
-                    carsRepository.DeleteCar(carId);
-                    dgvCars.Rows.RemoveAt(dgvCars.SelectedRows[0].Index);
-                    mainForm.UpadateAll();
+
+                    DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выбранный автомобиль?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        carsRepository.DeleteCar(carId);
+                        dgvCars.Rows.RemoveAt(dgvCars.SelectedRows[0].Index);
+                        mainForm.UpadateAll();
+                    }
                 }
                 else if (dgvCars.SelectedRows.Count == 0)
                 {

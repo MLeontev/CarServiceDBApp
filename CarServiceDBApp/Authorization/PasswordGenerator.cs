@@ -9,7 +9,7 @@ namespace CarServiceDBApp.Authorization
 
         public static string GenerateRandomPassword(int length = 12)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+_=!№;%:?*";
+            const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789-+_=!№;%:?*";
             Random random = new Random();
             char[] password = new char[length];
             for (int i = 0; i < length; i++)

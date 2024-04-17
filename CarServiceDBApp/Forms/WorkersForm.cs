@@ -74,10 +74,14 @@ namespace CarServiceDBApp.Forms
                         }
                     }
 
-                    int workerId = Convert.ToInt32(dgvWorkers.CurrentRow.Cells["WorkerId"].Value);
-                    workersRepository.DeleteWorker(workerId);
-                    dgvWorkers.Rows.RemoveAt(dgvWorkers.SelectedRows[0].Index);
-                    mainForm.UpadateAll();
+                    DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выбранного сотрудника?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        int workerId = Convert.ToInt32(dgvWorkers.CurrentRow.Cells["WorkerId"].Value);
+                        workersRepository.DeleteWorker(workerId);
+                        dgvWorkers.Rows.RemoveAt(dgvWorkers.SelectedRows[0].Index);
+                        mainForm.UpadateAll();
+                    }
                 }
                 else if (dgvWorkers.SelectedRows.Count == 0)
                 {
@@ -246,12 +250,11 @@ namespace CarServiceDBApp.Forms
                         DataRowView drvWorker = (DataRowView)cbPositionToEdit.SelectedItem;
                         int positionId = Convert.ToInt32(drvWorker["PositionId"]);
 
-                        if (workersRepository.CountDirectors() == 1 && (int)dgvWorkers.CurrentRow.Cells["PositionId"].Value == 21495)
+                        if (workersRepository.CountDirectors() == 1 && (int)dgvWorkers.CurrentRow.Cells["PositionId"].Value == 21495 && positionId != 21495)
                         {
                             ErrorHandler.ShowErrorMessage("Нельзя изменить должность единственного директора");
                         }
-
-                        if (ValidateWorkerInput(id, surname, name, patronymic, number))
+                        else if (ValidateWorkerInput(id, surname, name, patronymic, number))
                         {
                             int workerId = Convert.ToInt32(id);
                             workersRepository.UpdateWorker(workerId, positionId, surname, name, patronymic, number);

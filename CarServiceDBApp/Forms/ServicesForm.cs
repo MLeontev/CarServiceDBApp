@@ -34,6 +34,7 @@ namespace CarServiceDBApp.Forms
                     break;
                 case 18511:
                     gbService.Enabled = false;
+                    dgvServices.Columns["Price"].Visible = false;
                     break;
             }
         }
@@ -90,19 +91,27 @@ namespace CarServiceDBApp.Forms
             {
                 if (dgvServices.SelectedRows.Count == 1)
                 {
-                    int serviceId = Convert.ToInt32(dgvServices.CurrentRow.Cells["ServiceId"].Value);
-                    servicesRepository.DeleteService(serviceId);
-                    dgvServices.Rows.RemoveAt(dgvServices.SelectedRows[0].Index);
+                    DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выбранную услугу?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        int serviceId = Convert.ToInt32(dgvServices.CurrentRow.Cells["ServiceId"].Value);
+                        servicesRepository.DeleteService(serviceId);
+                        dgvServices.Rows.RemoveAt(dgvServices.SelectedRows[0].Index);
 
-                    tbNameToEdit.Clear();
-                    tbPriceToEdit.Clear();
-                    tbDescriptionToEdit.Clear();
+                        tbNameToEdit.Clear();
+                        tbPriceToEdit.Clear();
+                        tbDescriptionToEdit.Clear();
 
-                    mainForm.UpadateAll();
+                        mainForm.UpadateAll();
+                    }
+                }
+                else if (dgvServices.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите услугу для удаления");
                 }
                 else
                 {
-                    ErrorHandler.ShowWarningMessage("Выберите одну услугу для редактирования");
+                    ErrorHandler.ShowWarningMessage("Выберите только одну услугу для удаления");
                 }
             }
             catch (MySqlException ex)
@@ -189,9 +198,13 @@ namespace CarServiceDBApp.Forms
                         mainForm.UpadateAll();
                     }
                 }
+                else if (dgvServices.SelectedRows.Count == 0)
+                {
+                    ErrorHandler.ShowWarningMessage("Выберите услугу для редактирования");
+                }
                 else
                 {
-                    ErrorHandler.ShowWarningMessage("Выберите одну услугу для редактирования");
+                    ErrorHandler.ShowWarningMessage("Выберите только одну услугу для редактирования");
                 }
             }
             catch (MySqlException ex)
